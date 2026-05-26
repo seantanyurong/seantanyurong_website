@@ -2,14 +2,14 @@ import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ProjectsGrid } from "@/components/ProjectsGrid";
-import { BucketList } from "@/components/BucketList";
+import { Sidequests } from "@/components/Sidequests";
 import { Footer } from "@/components/Footer";
-import { getProjects, getBucketList } from "@/lib/content";
+import { getProjects, getSidequests } from "@/lib/content";
 
 export default async function HomePage() {
-  const [projects, bucket] = await Promise.all([
+  const [projects, sidequests] = await Promise.all([
     getProjects(),
-    getBucketList(),
+    getSidequests(),
   ]);
 
   return (
@@ -33,9 +33,9 @@ export default async function HomePage() {
             eyebrow="On the list"
             title="Sidequests"
             accent="purple"
-            count={bucket.length}
+            count={sidequests.length}
           />
-          <BucketList items={bucket} />
+          <Sidequests items={sidequests} />
         </section>
 
         <Footer />
