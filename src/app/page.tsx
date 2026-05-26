@@ -28,10 +28,10 @@ export default async function HomePage() {
           <ProjectsGrid projects={projects} />
         </section>
 
-        <section id="bucket-list" className="scroll-mt-24 pb-20">
+        <section id="sidequests" className="scroll-mt-24 pb-20">
           <SectionHeading
-            eyebrow="Side quests"
-            title="Bucket List"
+            eyebrow="On the list"
+            title="Sidequests"
             accent="purple"
             count={bucket.length}
           />
