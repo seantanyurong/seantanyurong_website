@@ -21,6 +21,12 @@ const baseSchema = z.object({
 export const projectSchema = baseSchema.extend({
   url: z.string(),
   date: z.coerce.date(),
+  // Optional 1-line blurb shown under the title on the card.
+  description: z.string().optional(),
+  // Optional path (e.g. "/projects/knife-sharpening-sg.png") served from
+  // /public. When set together with `featured: true`, the card upgrades to a
+  // 2-column screenshot variant.
+  image: z.string().optional(),
 });
 
 export const sidequestSchema = baseSchema.extend({
