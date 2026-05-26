@@ -12,7 +12,6 @@ type NavItem = { id: string; label: string };
 const items: NavItem[] = [
   { id: "top", label: "Home" },
   { id: "projects", label: "Projects" },
-  { id: "team", label: "Team" },
   { id: "bucket-list", label: "Bucket List" },
 ];
 

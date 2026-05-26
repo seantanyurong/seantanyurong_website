@@ -4,7 +4,7 @@ import matter from "gray-matter";
 import { z } from "zod";
 
 /*
-  Content lives as markdown files under /content/{projects,team,bucketList}.
+  Content lives as markdown files under /content/{projects,bucketList}.
   We read frontmatter only (no body — the live sections don't render markdown
   bodies). Schemas mirror the originals from the Astro site so existing files
   validate without edits.
@@ -23,17 +23,11 @@ export const projectSchema = baseSchema.extend({
   date: z.coerce.date(),
 });
 
-export const teamSchema = baseSchema.extend({
-  url: z.string(),
-  date: z.coerce.date(),
-});
-
 export const bucketListSchema = baseSchema.extend({
   description: z.string(),
 });
 
 export type Project = z.infer<typeof projectSchema> & { slug: string };
-export type TeamItem = z.infer<typeof teamSchema> & { slug: string };
 export type BucketListItem = z.infer<typeof bucketListSchema> & { slug: string };
 
 async function readDir<T extends z.ZodObject<z.ZodRawShape>>(
@@ -57,13 +51,6 @@ async function readDir<T extends z.ZodObject<z.ZodRawShape>>(
 
 export async function getProjects(): Promise<Project[]> {
   const items = await readDir("projects", projectSchema);
-  return items
-    .filter((p) => !p.draft)
-    .sort((a, b) => b.date.valueOf() - a.date.valueOf());
-}
-
-export async function getTeam(): Promise<TeamItem[]> {
-  const items = await readDir("team", teamSchema);
   return items
     .filter((p) => !p.draft)
     .sort((a, b) => b.date.valueOf() - a.date.valueOf());

@@ -23,7 +23,7 @@ export function Hero() {
             Constructor
           </a>
           , where I help build AI-powered product search and discovery for
-          ecommerce. Outside of work, I&apos;m the CTO of{' '}
+          ecommerce. Outside of work, I&apos;m CTO of{' '}
           <a
             href="https://jobless.club"
             target="_blank"
@@ -32,7 +32,7 @@ export function Hero() {
           >
             The Jobless Club
           </a>
-          , a Singaporean indie-hacking team behind a handful of bootstrapped
+          , a Singaporean indie-hacking team behind a few bootstrapped
           businesses — including the country&apos;s #1 knife-sharpening service.
         </p>
         <p>
