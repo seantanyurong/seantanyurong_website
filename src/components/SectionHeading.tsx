@@ -58,7 +58,7 @@ export function SectionHeading({
           </span>
         )}
         {collapsible && (
-          <ChevronDownIcon className="h-4 w-4 self-center text-neutral-400 transition-transform duration-200 group-open:rotate-180" />
+          <ChevronDownIcon className="h-4 w-4 self-center text-neutral-400 transition-transform duration-200 group-open/section:rotate-180" />
         )}
       </div>
     </div>

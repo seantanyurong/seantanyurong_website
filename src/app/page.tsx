@@ -21,7 +21,7 @@ export default async function HomePage() {
         <section id="projects" className="scroll-mt-24 pb-20">
           <details
             open
-            className="group [&_summary::-webkit-details-marker]:hidden"
+            className="group/section [&_summary::-webkit-details-marker]:hidden"
           >
             <summary className="mb-8 cursor-pointer list-none rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-blue-300">
               <SectionHeading
@@ -39,7 +39,7 @@ export default async function HomePage() {
         <section id="sidequests" className="scroll-mt-24 pb-20">
           <details
             open
-            className="group [&_summary::-webkit-details-marker]:hidden"
+            className="group/section [&_summary::-webkit-details-marker]:hidden"
           >
             <summary className="mb-8 cursor-pointer list-none rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-blue-300">
               <SectionHeading
