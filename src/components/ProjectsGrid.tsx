@@ -89,7 +89,7 @@ function ImageCard({ project }: { project: Project }) {
         src={project.image!}
         alt={name}
         fill
-        loading="eager"
+        priority
         sizes="(min-width: 1024px) 66vw, (min-width: 640px) 100vw, 100vw"
         className="-z-10 object-cover transition-transform duration-500 group-hover:scale-[1.03]"
       />
