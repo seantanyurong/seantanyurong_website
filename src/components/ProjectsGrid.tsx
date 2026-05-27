@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { Project } from "@/lib/content";
-import { ArrowUpRight } from "@/components/icons";
+import { ArrowUpRightIcon } from "@heroicons/react/20/solid";
 
 /*
   Projects grid — two card variants in a bento layout:
@@ -68,7 +68,7 @@ function TextCard({ project }: { project: Project }) {
           {formatDate(project.date)}
         </time>
         <CardChrome>
-          <ArrowUpRight className="h-3.5 w-3.5" />
+          <ArrowUpRightIcon className="h-3.5 w-3.5" />
         </CardChrome>
       </div>
     </a>
@@ -109,7 +109,7 @@ function ImageCard({ project }: { project: Project }) {
           )}
         </div>
         <CardChrome>
-          <ArrowUpRight className="h-3.5 w-3.5" />
+          <ArrowUpRightIcon className="h-3.5 w-3.5" />
         </CardChrome>
       </div>
     </a>

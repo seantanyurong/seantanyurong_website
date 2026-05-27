@@ -19,23 +19,39 @@ export default async function HomePage() {
         <Hero />
 
         <section id="projects" className="scroll-mt-24 pb-20">
-          <SectionHeading
-            eyebrow="Built"
-            title="Projects"
-            accent="orange"
-            count={projects.length}
-          />
-          <ProjectsGrid projects={projects} />
+          <details
+            open
+            className="group [&_summary::-webkit-details-marker]:hidden"
+          >
+            <summary className="mb-8 cursor-pointer list-none rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-blue-300">
+              <SectionHeading
+                eyebrow="Built"
+                title="Projects"
+                accent="orange"
+                count={projects.length}
+                collapsible
+              />
+            </summary>
+            <ProjectsGrid projects={projects} />
+          </details>
         </section>
 
         <section id="sidequests" className="scroll-mt-24 pb-20">
-          <SectionHeading
-            eyebrow="On the list"
-            title="Sidequests"
-            accent="purple"
-            count={sidequests.length}
-          />
-          <Sidequests items={sidequests} />
+          <details
+            open
+            className="group [&_summary::-webkit-details-marker]:hidden"
+          >
+            <summary className="mb-8 cursor-pointer list-none rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-blue-300">
+              <SectionHeading
+                eyebrow="On the list"
+                title="Sidequests"
+                accent="purple"
+                count={sidequests.length}
+                collapsible
+              />
+            </summary>
+            <Sidequests items={sidequests} />
+          </details>
         </section>
 
         <Footer />

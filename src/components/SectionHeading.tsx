@@ -1,7 +1,15 @@
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
+
 /*
   Section heading — small uppercase eyebrow + serif title with a colored
   underline accent. The `accent` prop maps to a Tailwind decoration color
   picked per section.
+
+  When `collapsible` is true the heading expects to live inside a
+  <summary> whose parent <details class="group"> drives the chevron
+  rotation via the `group-open:` variant. The whole block stays a div so it
+  can be rendered both as a static heading and as a summary child without
+  invalid HTML nesting.
 */
 
 type Accent = "teal" | "orange" | "purple" | "rose" | "lime";
@@ -19,14 +27,20 @@ export function SectionHeading({
   title,
   accent,
   count,
+  collapsible = false,
 }: {
   eyebrow: string;
   title: string;
   accent: Accent;
   count?: number;
+  collapsible?: boolean;
 }) {
   return (
-    <div className="mb-8 flex items-baseline justify-between gap-4">
+    <div
+      className={`flex items-baseline justify-between gap-4 ${
+        collapsible ? "" : "mb-8"
+      }`}
+    >
       <div>
         <p className="text-xs uppercase tracking-[0.18em] text-neutral-400">
           {eyebrow}
@@ -37,11 +51,16 @@ export function SectionHeading({
           {title}
         </h2>
       </div>
-      {typeof count === "number" && (
-        <span className="font-mono text-xs text-neutral-400">
-          {String(count).padStart(2, "0")}
-        </span>
-      )}
+      <div className="flex shrink-0 items-baseline gap-3">
+        {typeof count === "number" && (
+          <span className="font-mono text-xs text-neutral-400">
+            {String(count).padStart(2, "0")}
+          </span>
+        )}
+        {collapsible && (
+          <ChevronDownIcon className="h-4 w-4 self-center text-neutral-400 transition-transform duration-200 group-open:rotate-180" />
+        )}
+      </div>
     </div>
   );
 }
