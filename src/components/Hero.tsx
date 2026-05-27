@@ -50,9 +50,8 @@ export function Hero() {
           . Neovim lover.
         </p>
         <p>
-          My edge comes from having a T-shaped skillset of business breadth and
-          technical depth — I&apos;m at my best when dropped into unfamiliar
-          problems and asked to figure them out.
+          I&apos;m at my best when dropped into unfamiliar problems and asked to
+          figure them out.
         </p>
       </div>
     </section>
