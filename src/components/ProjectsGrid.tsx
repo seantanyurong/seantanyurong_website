@@ -39,7 +39,7 @@ function TextCard({ project }: { project: Project }) {
       href={project.url}
       target="_blank"
       rel="noreferrer"
-      className="group relative flex h-full min-h-[160px] flex-col justify-between rounded-2xl border border-neutral-200 bg-neutral-50 p-5 transition-all hover:-translate-y-0.5 hover:border-neutral-300 hover:bg-white hover:shadow-sm focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:outline-none"
+      className="group relative flex h-full min-h-[220px] flex-col justify-between rounded-2xl border border-neutral-200 bg-neutral-50 p-5 transition-all hover:-translate-y-0.5 hover:border-neutral-300 hover:bg-white hover:shadow-sm focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:outline-none"
     >
       <div>
         {kind && (
@@ -83,7 +83,7 @@ function ImageCard({ project }: { project: Project }) {
       href={project.url}
       target="_blank"
       rel="noreferrer"
-      className="group relative isolate flex aspect-[2/1] flex-col justify-end overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 transition-all hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:outline-none sm:col-span-2"
+      className="group relative isolate flex min-h-[220px] flex-col justify-end overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 transition-all hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:outline-none sm:aspect-[2/1] sm:col-span-2"
     >
       <Image
         src={project.image!}
@@ -103,7 +103,7 @@ function ImageCard({ project }: { project: Project }) {
           )}
           <h3 className="mt-1 font-serif text-2xl leading-tight">{name}</h3>
           {project.description && (
-            <p className="mt-1 max-w-md text-sm text-white/80">
+            <p className="mt-1 hidden max-w-md text-sm text-white/80 sm:block">
               {project.description}
             </p>
           )}
