@@ -118,12 +118,25 @@ function ImageCard({ project }: { project: Project }) {
 }
 
 export function ProjectsGrid({ projects }: { projects: Project[] }) {
+  // Image cards alternate sides at the lg breakpoint (3-col grid). 1st on the
+  // left (cols 1-2), 2nd on the right (cols 2-3), and so on. Combined with
+  // `grid-auto-flow: dense`, text cards backfill the leftover cell on the
+  // opposite side automatically.
+  let imageIdx = 0;
   return (
     <ul className="grid grid-flow-row-dense grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {projects.map((p) => {
         const useImage = !!p.image;
+        let posClass = "";
+        if (useImage) {
+          posClass = imageIdx % 2 === 0 ? "lg:col-start-1" : "lg:col-start-2";
+          imageIdx++;
+        }
         return (
-          <li key={p.slug} className={useImage ? "sm:col-span-2" : ""}>
+          <li
+            key={p.slug}
+            className={useImage ? `sm:col-span-2 ${posClass}` : ""}
+          >
             {useImage ? <ImageCard project={p} /> : <TextCard project={p} />}
           </li>
         );
