@@ -7,8 +7,9 @@ import { ArrowUpRightIcon } from "@heroicons/react/20/solid";
 
   - TEXT variant (default): kind label, serif title, optional description,
     date, arrow. 1 column.
-  - IMAGE variant (when `featured: true` AND `image` is set): full-bleed
-    screenshot with title overlay. Spans 2 columns on >= sm.
+  - IMAGE variant (when `image` is set): full-bleed screenshot with title
+    overlay. Spans 2 columns on >= sm. The `featured` flag is independent —
+    it only controls sort order (pinning to the top of the list).
 
   Cards inherit their order from getProjects() — featured-first, then by date.
 */
@@ -118,9 +119,9 @@ function ImageCard({ project }: { project: Project }) {
 
 export function ProjectsGrid({ projects }: { projects: Project[] }) {
   return (
-    <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <ul className="grid grid-flow-row-dense grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {projects.map((p) => {
-        const useImage = p.featured && p.image;
+        const useImage = !!p.image;
         return (
           <li key={p.slug} className={useImage ? "sm:col-span-2" : ""}>
             {useImage ? <ImageCard project={p} /> : <TextCard project={p} />}
