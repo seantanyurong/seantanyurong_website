@@ -24,9 +24,12 @@ export const projectSchema = baseSchema.extend({
   // Optional 1-line blurb shown under the title on the card.
   description: z.string().optional(),
   // Optional path (e.g. "/projects/knife-sharpening-sg.png") served from
-  // /public. When set together with `featured: true`, the card upgrades to a
-  // 2-column screenshot variant.
+  // /public. When set, the card renders as an image-variant card.
   image: z.string().optional(),
+  // Controls how wide the card is in the grid. true = spans 2 columns at sm+
+  // (the showcase "bento" treatment). false = single column (compact card).
+  // Only meaningful when `image` is set — text cards are always 1 column.
+  wide: z.boolean().optional().default(true),
 });
 
 export const sidequestSchema = baseSchema.extend({

@@ -76,7 +76,7 @@ function TextCard({ project }: { project: Project }) {
   );
 }
 
-function ImageCard({ project }: { project: Project }) {
+function ImageCard({ project, wide }: { project: Project; wide: boolean }) {
   // Caller guarantees project.image is defined.
   const { kind, name } = stripTypePrefix(project.title);
   return (
@@ -84,19 +84,47 @@ function ImageCard({ project }: { project: Project }) {
       href={project.url}
       target="_blank"
       rel="noreferrer"
-      className="group relative isolate flex min-h-[220px] flex-col justify-end overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 transition-all hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:outline-none sm:aspect-[2/1] sm:col-span-2"
+      className={`group block rounded-2xl [perspective:1200px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 ${
+        wide ? "sm:aspect-[2/1]" : "sm:aspect-square"
+      }`}
     >
-      <Image
-        src={project.image!}
-        alt={name}
-        fill
-        priority
-        sizes="(min-width: 1024px) 66vw, (min-width: 640px) 100vw, 100vw"
-        className="-z-10 object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-      />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/65 via-black/20 to-transparent" />
-      <div className="flex items-end justify-between p-5 text-white">
-        <div>
+      {/* Rotating wrapper. Hovering the outer .group flips this 180° on Y;
+          front and back faces sit on opposite sides via backface-visibility.
+          The min-h lives on this wrapper (not the outer <a>) because the
+          absolute-positioned faces inside need a positioned ancestor with a
+          resolved height — on mobile, where the outer <a> has no aspect ratio,
+          `h-full` would resolve to `auto` and the faces would collapse. */}
+      <div className="relative h-full min-h-[220px] w-full transition-transform duration-700 ease-out [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)] group-focus-visible:[transform:rotateY(180deg)]">
+        {/* FRONT: image with title overlay (the existing card design). */}
+        <div className="absolute inset-0 isolate flex flex-col justify-end overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 [backface-visibility:hidden]">
+          <Image
+            src={project.image!}
+            alt={name}
+            fill
+            priority
+            sizes="(min-width: 1024px) 66vw, (min-width: 640px) 100vw, 100vw"
+            className="-z-10 object-cover"
+          />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/65 via-black/20 to-transparent" />
+          <div className="flex items-end justify-between p-5 text-white">
+            <div>
+              {kind && (
+                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/70">
+                  {kind}
+                </span>
+              )}
+              <h3 className="mt-1 font-serif text-2xl leading-tight">{name}</h3>
+            </div>
+            <CardChrome>
+              <ArrowUpRightIcon className="h-3.5 w-3.5" />
+            </CardChrome>
+          </div>
+        </div>
+
+        {/* BACK: dark panel with the full description. Pre-rotated 180° so
+            it's facing away by default, then comes forward when the wrapper
+            flips. */}
+        <div className="absolute inset-0 flex flex-col rounded-2xl border border-neutral-800 bg-neutral-900 p-5 text-white [backface-visibility:hidden] [transform:rotateY(180deg)]">
           {kind && (
             <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/70">
               {kind}
@@ -104,40 +132,47 @@ function ImageCard({ project }: { project: Project }) {
           )}
           <h3 className="mt-1 font-serif text-2xl leading-tight">{name}</h3>
           {project.description && (
-            <p className="mt-1 hidden max-w-md text-sm text-white/80 sm:block">
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-white/85">
               {project.description}
             </p>
           )}
+          <div className="mt-auto flex justify-end pt-4">
+            <CardChrome>
+              <ArrowUpRightIcon className="h-3.5 w-3.5" />
+            </CardChrome>
+          </div>
         </div>
-        <CardChrome>
-          <ArrowUpRightIcon className="h-3.5 w-3.5" />
-        </CardChrome>
       </div>
     </a>
   );
 }
 
 export function ProjectsGrid({ projects }: { projects: Project[] }) {
-  // Image cards alternate sides at the lg breakpoint (3-col grid). 1st on the
-  // left (cols 1-2), 2nd on the right (cols 2-3), and so on. Combined with
-  // `grid-auto-flow: dense`, text cards backfill the leftover cell on the
-  // opposite side automatically.
-  let imageIdx = 0;
+  // Wide image cards (the showcase 2-col bento) alternate sides at the lg
+  // breakpoint (3-col grid). 1st on the left (cols 1-2), 2nd on the right
+  // (cols 2-3), and so on. Combined with `grid-auto-flow: dense`, text cards
+  // backfill the leftover cell on the opposite side automatically.
+  // Narrow image cards (1 col) don't alternate — they slot in like text cards.
+  let wideImageIdx = 0;
   return (
     <ul className="grid grid-flow-row-dense grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {projects.map((p) => {
         const useImage = !!p.image;
-        let posClass = "";
-        if (useImage) {
-          posClass = imageIdx % 2 === 0 ? "lg:col-start-1" : "lg:col-start-2";
-          imageIdx++;
+        const wide = useImage && p.wide;
+        let liClass = "";
+        if (wide) {
+          const posClass =
+            wideImageIdx % 2 === 0 ? "lg:col-start-1" : "lg:col-start-2";
+          liClass = `sm:col-span-2 ${posClass}`;
+          wideImageIdx++;
         }
         return (
-          <li
-            key={p.slug}
-            className={useImage ? `sm:col-span-2 ${posClass}` : ""}
-          >
-            {useImage ? <ImageCard project={p} /> : <TextCard project={p} />}
+          <li key={p.slug} className={liClass}>
+            {useImage ? (
+              <ImageCard project={p} wide={p.wide} />
+            ) : (
+              <TextCard project={p} />
+            )}
           </li>
         );
       })}
