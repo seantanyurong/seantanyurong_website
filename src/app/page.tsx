@@ -33,6 +33,18 @@ export default async function HomePage() {
               />
             </summary>
             <ProjectsGrid projects={projects} />
+            <p className="mt-6 text-sm text-neutral-500">
+              These are just a few — the rest live on{" "}
+              <a
+                href="https://github.com/seantanyurong"
+                target="_blank"
+                rel="noreferrer"
+                className="underline decoration-neutral-300 underline-offset-4 transition-colors hover:text-neutral-900 hover:decoration-neutral-900"
+              >
+                GitHub
+              </a>
+              .
+            </p>
           </details>
         </section>
 
