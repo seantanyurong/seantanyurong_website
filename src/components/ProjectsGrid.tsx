@@ -90,7 +90,7 @@ function ImageCard({ project, wide }: { project: Project; wide: boolean }) {
           absolute-positioned faces inside need a positioned ancestor with a
           resolved height — on mobile, where the outer <a> has no aspect ratio,
           `h-full` would resolve to `auto` and the faces would collapse. */}
-      <div className="relative h-full min-h-55 w-full transition-transform duration-700 ease-out transform-3d group-hover:transform-[rotateY(180deg)] group-focus-visible:transform[rotateY(180deg)]">
+      <div className="relative h-full min-h-55 w-full transition-transform duration-700 ease-out transform-3d group-hover:rotate-y-180 group-focus-visible:rotate-y-180">
         {/* FRONT: image with title overlay (the existing card design). */}
         <div className="absolute inset-0 isolate flex flex-col justify-end overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 backface-hidden">
           <Image
@@ -120,7 +120,7 @@ function ImageCard({ project, wide }: { project: Project; wide: boolean }) {
         {/* BACK: dark panel with the full description. Pre-rotated 180° so
             it's facing away by default, then comes forward when the wrapper
             flips. */}
-        <div className="absolute inset-0 flex flex-col rounded-2xl border border-neutral-800 bg-neutral-900 p-5 text-white backface-hidden transform[rotateY(180deg)]">
+        <div className="absolute inset-0 flex flex-col rounded-2xl border border-neutral-800 bg-neutral-900 p-5 text-white backface-hidden rotate-y-180">
           {kind && (
             <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/70">
               {kind}
