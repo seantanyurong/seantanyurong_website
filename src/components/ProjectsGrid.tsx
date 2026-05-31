@@ -1,6 +1,12 @@
-import Image from 'next/image';
-import type { Project } from '@/lib/content';
-import { ArrowUpRightIcon } from '@heroicons/react/20/solid';
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import type { Project } from "@/lib/content";
+import {
+  ArrowPathRoundedSquareIcon,
+  ArrowUpRightIcon,
+} from "@heroicons/react/20/solid";
 
 /*
   Projects grid — two card variants in a bento layout:
@@ -30,6 +36,27 @@ function CardChrome({ children }: { children: React.ReactNode }) {
     <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-neutral-400 shadow-sm transition-colors group-hover:bg-neutral-900 group-hover:text-white">
       {children}
     </span>
+  );
+}
+
+/* Mobile-only flip button. Sits in the same corner where the desktop arrow
+   chrome lives, but on tap it toggles the card's flipped state instead of
+   navigating. preventDefault + stopPropagation keep the parent <a> from
+   firing alongside it. */
+function FlipButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      aria-label="Flip card"
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onClick();
+      }}
+      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-neutral-400 shadow-sm transition-colors active:bg-neutral-900 active:text-white sm:hidden"
+    >
+      <ArrowPathRoundedSquareIcon className="h-3.5 w-3.5" />
+    </button>
   );
 }
 
@@ -75,13 +102,16 @@ function TextCard({ project }: { project: Project }) {
 function ImageCard({ project, wide }: { project: Project; wide: boolean }) {
   // Caller guarantees project.image is defined.
   const { kind, name } = stripTypePrefix(project.title);
+  // Desktop flips on hover; mobile flips on tap (state below).
+  const [flipped, setFlipped] = useState(false);
+  const toggleFlip = () => setFlipped((v) => !v);
   return (
     <a
       href={project.url}
       target="_blank"
       rel="noreferrer"
       className={`group block rounded-2xl perspective-distant focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 ${
-        wide ? 'sm:aspect-2/1' : 'sm:aspect-square'
+        wide ? "sm:aspect-2/1" : "sm:aspect-square"
       }`}
     >
       {/* Rotating wrapper. Hovering the outer .group flips this 180° on Y;
@@ -90,7 +120,11 @@ function ImageCard({ project, wide }: { project: Project; wide: boolean }) {
           absolute-positioned faces inside need a positioned ancestor with a
           resolved height — on mobile, where the outer <a> has no aspect ratio,
           `h-full` would resolve to `auto` and the faces would collapse. */}
-      <div className="relative h-full min-h-55 w-full transition-transform duration-700 ease-out transform-3d group-hover:rotate-y-180 group-focus-visible:rotate-y-180">
+      <div
+        className={`relative h-full min-h-55 w-full transition-transform duration-700 ease-out transform-3d group-hover:rotate-y-180 group-focus-visible:rotate-y-180 ${
+          flipped ? "rotate-y-180" : ""
+        }`}
+      >
         {/* FRONT: image with title overlay (the existing card design). */}
         <div className="absolute inset-0 isolate flex flex-col justify-end overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 backface-hidden">
           <Image
@@ -111,9 +145,14 @@ function ImageCard({ project, wide }: { project: Project; wide: boolean }) {
               )}
               <h3 className="font-serif text-2xl leading-tight">{name}</h3>
             </div>
-            <CardChrome>
-              <ArrowUpRightIcon className="h-3.5 w-3.5" />
-            </CardChrome>
+            {/* Desktop: decorative arrow chrome (whole card is the link).
+                Mobile: tap-to-flip button replaces it. */}
+            <span className="hidden sm:flex">
+              <CardChrome>
+                <ArrowUpRightIcon className="h-3.5 w-3.5" />
+              </CardChrome>
+            </span>
+            <FlipButton onClick={toggleFlip} />
           </div>
         </div>
 
@@ -132,10 +171,13 @@ function ImageCard({ project, wide }: { project: Project; wide: boolean }) {
               {project.description}
             </p>
           )}
-          <div className="mt-auto flex justify-end pt-4">
-            <CardChrome>
-              <ArrowUpRightIcon className="h-3.5 w-3.5" />
-            </CardChrome>
+          <div className="mt-auto flex justify-end gap-2 pt-4">
+            <span className="hidden sm:flex">
+              <CardChrome>
+                <ArrowUpRightIcon className="h-3.5 w-3.5" />
+              </CardChrome>
+            </span>
+            <FlipButton onClick={toggleFlip} />
           </div>
         </div>
       </div>
