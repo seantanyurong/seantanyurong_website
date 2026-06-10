@@ -136,6 +136,13 @@ function ImageCard({ project, wide }: { project: Project; wide: boolean }) {
             className="-z-10 object-cover"
           />
           <div className="absolute inset-0 -z-10 bg-linear-to-t from-black/65 via-black/20 to-transparent" />
+          {/* Headline stat. Sits in the top-left as a glass pill so it stands
+              out without competing with the title hierarchy at the bottom. */}
+          {project.stat && (
+            <span className="absolute top-3 left-3 inline-flex items-center rounded-full bg-neutral-900/85 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-white shadow-md ring-1 ring-white/15 backdrop-blur-md sm:top-4 sm:left-4 sm:px-3 sm:py-1 sm:text-[11px]">
+              {project.stat}
+            </span>
+          )}
           <div className="flex items-end justify-between p-5 text-white">
             <div>
               {kind && (

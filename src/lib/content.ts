@@ -30,6 +30,10 @@ export const projectSchema = baseSchema.extend({
   // (the showcase "bento" treatment). false = single column (compact card).
   // Only meaningful when `image` is set — text cards are always 1 column.
   wide: z.boolean().optional().default(true),
+  // Optional short headline stat (e.g. "$50K+ EARNED", "2000+ KNIVES",
+  // "1.7K CHATS"). Renders as a glass pill on the front of image cards.
+  // Keep it tight — 3-4 words max — so it reads at a glance.
+  stat: z.string().optional(),
 });
 
 export const sidequestSchema = baseSchema.extend({
