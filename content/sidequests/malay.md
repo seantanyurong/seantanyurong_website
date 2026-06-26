@@ -1,4 +1,4 @@
 ---
 title: 'Side Quest: Learn malay'
-description: 'In the future'
+description: 'In Progress - 2026 Q3'
 ---
