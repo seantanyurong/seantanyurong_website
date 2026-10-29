@@ -9,11 +9,11 @@ export function Hero() {
         Sean Tan
       </h1>
       <p className="mt-3 text-base text-neutral-500 sm:text-lg">
-        Software Engineer + Side Quester from Singapore.
+        Forward Deployed Engineer + Side Quester from Singapore.
       </p>
       <div className="mt-8 max-w-prose space-y-4 text-[15px] leading-relaxed text-neutral-700">
         <p>
-          I&apos;m a senior software engineer at{' '}
+          I&apos;m a forward deployed engineer at{' '}
           <a
             href="https://constructor.io"
             target="_blank"
