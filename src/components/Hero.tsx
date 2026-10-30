@@ -46,6 +46,15 @@ export function Hero() {
             className="underline decoration-neutral-300 underline-offset-4 transition-colors hover:decoration-neutral-900"
           >
             Channel News Asia
+          </a>{' '}
+          and{' '}
+          <a
+            href="https://www.youtube.com/watch?v=OlyqJy0_srs"
+            target="_blank"
+            rel="noreferrer"
+            className="underline decoration-neutral-300 underline-offset-4 transition-colors hover:decoration-neutral-900"
+          >
+            The Financial Coconut podcast
           </a>
           . Neovim lover.
         </p>
