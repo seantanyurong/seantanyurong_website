@@ -7,6 +7,8 @@ import {
   formatMonth,
   parsePins,
   pinUiReducer,
+  lerpView,
+  zoomTo,
 } from "./places-core.ts";
 
 // Builds a page in the shape returned by Notion's data source query API.
@@ -245,4 +247,43 @@ test("reads the trip name from the title column whatever it is called", () => {
   const renamed = { ...p, properties: { ...rest, "Trip Name": Place } };
   const pins = parsePins([renamed], TODAY);
   assert.equal(pins[0].visits[0].trip, "Hanoi & Sapa");
+});
+
+const FULL = { width: 960, height: 418 };
+
+test("zoomTo frames a cluster at the map's aspect ratio", () => {
+  const pts = [{ x: 700, y: 200 }, { x: 720, y: 210 }, { x: 712, y: 190 }];
+  const v = zoomTo(pts, FULL);
+  assert.ok(Math.abs(v.w / v.h - FULL.width / FULL.height) < 1e-9);
+  for (const p of pts) {
+    assert.ok(p.x > v.x && p.x < v.x + v.w && p.y > v.y && p.y < v.y + v.h);
+  }
+  assert.ok(v.w >= FULL.width / 8 && v.w < FULL.width);
+});
+
+test("zoomTo centres a lone point at the minimum zoom width", () => {
+  const v = zoomTo([{ x: 480, y: 200 }], FULL);
+  assert.equal(v.w, FULL.width / 8);
+  assert.ok(Math.abs(v.x + v.w / 2 - 480) < 1e-9);
+  assert.ok(Math.abs(v.y + v.h / 2 - 200) < 1e-9);
+});
+
+test("zoomTo never leaves the map", () => {
+  const v = zoomTo([{ x: 955, y: 5 }], FULL);
+  assert.ok(v.x >= 0 && v.y >= 0);
+  assert.ok(v.x + v.w <= FULL.width + 1e-9 && v.y + v.h <= FULL.height + 1e-9);
+});
+
+test("zoomTo falls back to the full map for a world-spanning cluster", () => {
+  assert.deepEqual(zoomTo([{ x: 0, y: 0 }, { x: 960, y: 418 }], FULL), {
+    x: 0, y: 0, w: 960, h: 418,
+  });
+});
+
+test("lerpView interpolates between views", () => {
+  const a = { x: 0, y: 0, w: 960, h: 418 };
+  const b = { x: 600, y: 150, w: 120, h: 52.25 };
+  assert.deepEqual(lerpView(a, b, 0), a);
+  assert.deepEqual(lerpView(a, b, 1), b);
+  assert.equal(lerpView(a, b, 0.5).x, 300);
 });

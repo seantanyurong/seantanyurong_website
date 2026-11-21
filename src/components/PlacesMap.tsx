@@ -5,13 +5,12 @@ import type { FeatureCollection } from "geojson";
 import countries110m from "world-atlas/countries-110m.json";
 import type { Pin } from "@/lib/places-core";
 import { findCountry } from "@/lib/places-geo";
-import { PlacesMapPins, type MapPoint } from "./PlacesMapPins";
+import { PlacesMapView, type MapPoint } from "./PlacesMapView";
 
 /*
   Places map — a static world SVG drawn on the server (no tiles, no API key),
-  with an interactive pin overlay. Countries with at least one pin are
-  shaded. The overlay clusters pins that would overlap at the map's rendered
-  width.
+  inside an interactive client view (pins, tooltips, click-to-zoom).
+  Countries with at least one pin are shaded.
 */
 
 const WIDTH = 960;
@@ -45,28 +44,26 @@ export function PlacesMap({ pins }: { pins: Pin[] }) {
 
   return (
     <div>
-      <div className="relative">
-        <svg
-          viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-          className="h-auto w-full"
-          role="img"
-          aria-label={`World map with ${pins.length} places visited`}
-        >
-          {countryPaths.map(({ id, d }, i) => (
-            <path
-              key={i}
-              d={d}
-              className={`stroke-white ${
-                id !== undefined && visited.has(id)
-                  ? "fill-teal-100"
-                  : "fill-neutral-100"
-              }`}
-              strokeWidth={0.5}
-            />
-          ))}
-        </svg>
-        <PlacesMapPins points={points} width={WIDTH} height={HEIGHT} />
-      </div>
+      <PlacesMapView
+        points={points}
+        width={WIDTH}
+        height={HEIGHT}
+        label={`World map with ${pins.length} places visited`}
+      >
+        {countryPaths.map(({ id, d }, i) => (
+          <path
+            key={i}
+            d={d}
+            className={`stroke-white ${
+              id !== undefined && visited.has(id)
+                ? "fill-teal-100"
+                : "fill-neutral-100"
+            }`}
+            strokeWidth={0.5}
+            vectorEffect="non-scaling-stroke"
+          />
+        ))}
+      </PlacesMapView>
       <p className="mt-6 text-sm text-neutral-500">
         {pins.length} {pins.length === 1 ? "city" : "cities"} across{" "}
         {visited.size} {visited.size === 1 ? "country" : "countries"}.

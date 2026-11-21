@@ -216,3 +216,44 @@ export function pinUiReducer(state: PinUi, event: PinEvent): PinUi {
 export function activePin(state: PinUi): number | null {
   return state.hover ?? state.focus ?? state.pinned;
 }
+
+/* ---------- Zoom ---------- */
+
+export type View = { x: number; y: number; w: number; h: number };
+
+/*
+  The region to zoom into for a cluster: its bounding box plus padding, at
+  least 1/8 of the map wide, at the map's aspect ratio, kept inside the map.
+*/
+export function zoomTo(
+  points: { x: number; y: number }[],
+  full: { width: number; height: number },
+  minWidth = full.width / 8,
+): View {
+  const aspect = full.width / full.height;
+  const xs = points.map((p) => p.x);
+  const ys = points.map((p) => p.y);
+  const cx = (Math.min(...xs) + Math.max(...xs)) / 2;
+  const cy = (Math.min(...ys) + Math.max(...ys)) / 2;
+
+  // Pad the bounding box by 50% so edge pins aren't on the frame.
+  let w = Math.max((Math.max(...xs) - Math.min(...xs)) * 1.5, minWidth);
+  let h = (Math.max(...ys) - Math.min(...ys)) * 1.5;
+  if (w / aspect < h) w = h * aspect;
+  h = w / aspect;
+
+  if (w >= full.width) return { x: 0, y: 0, w: full.width, h: full.height };
+
+  const clamp = (v: number, max: number) => Math.min(Math.max(v, 0), max);
+  return {
+    x: clamp(cx - w / 2, full.width - w),
+    y: clamp(cy - h / 2, full.height - h),
+    w,
+    h,
+  };
+}
+
+export function lerpView(a: View, b: View, t: number): View {
+  const mix = (p: number, q: number) => (t === 1 ? q : p + (q - p) * t);
+  return { x: mix(a.x, b.x), y: mix(a.y, b.y), w: mix(a.w, b.w), h: mix(a.h, b.h) };
+}
