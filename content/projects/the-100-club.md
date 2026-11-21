@@ -1,7 +1,7 @@
 ---
 title: 'Software / Business: The 100 Club'
 date: 2023-01-01
-url: https://the100club.io/
+url: https://the100club-paused.vercel.app/
 description: 'Built a full-stack membership platform to run a mastermind community for founders in Singapore. 4-figures MRR.'
 image: '/projects/the100club.png'
 stat: '4-figure MRR'
