@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { formatMonth, parsePins } from "./places-core.ts";
+import { clusterPoints, formatMonth, parsePins } from "./places-core.ts";
 
 // Builds a page in the shape returned by Notion's data source query API.
 function page(
@@ -106,4 +106,33 @@ test("ignores malformed rows instead of throwing", () => {
 test("formatMonth renders short month and year", () => {
   assert.equal(formatMonth("2025-10-24"), "Oct 2025");
   assert.equal(formatMonth("2026-01-01"), "Jan 2026");
+});
+
+test("clusterPoints merges points within the radius and keeps far ones apart", () => {
+  const clusters = clusterPoints(
+    [
+      { id: "yokohama", x: 100, y: 100 },
+      { id: "shiga", x: 103, y: 98 },
+      { id: "london", x: 10, y: 10 },
+    ],
+    12,
+  );
+  assert.deepEqual(
+    clusters.map((c) => c.items.map((i) => i.id)),
+    [["yokohama", "shiga"], ["london"]],
+  );
+  assert.deepEqual([clusters[0].x, clusters[0].y], [101.5, 99]);
+});
+
+test("clusterPoints chains nearby points into one cluster", () => {
+  const clusters = clusterPoints(
+    [
+      { id: "bangkok", x: 0, y: 0 },
+      { id: "khao-kho", x: 8, y: 0 },
+      { id: "chiang-mai", x: 16, y: 0 },
+    ],
+    10,
+  );
+  assert.equal(clusters.length, 1);
+  assert.equal(clusters[0].items.length, 3);
 });

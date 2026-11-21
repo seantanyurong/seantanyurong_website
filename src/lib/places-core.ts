@@ -91,3 +91,40 @@ export function formatMonth(iso: string): string {
     { month: "short", year: "numeric", timeZone: "UTC" },
   );
 }
+
+export type Cluster<T> = { x: number; y: number; items: T[] };
+
+/*
+  Groups projected points that would overlap on screen. Any two points
+  within `radius` end up in the same cluster (chained, so A–B–C merge even if
+  A and C are further apart). Cluster position is the mean of its points;
+  clusters keep the input order of their first item.
+*/
+export function clusterPoints<T extends { x: number; y: number }>(
+  points: T[],
+  radius: number,
+): Cluster<T>[] {
+  const groupOf = points.map((_, i) => i);
+  const find = (i: number): number =>
+    groupOf[i] === i ? i : (groupOf[i] = find(groupOf[i]));
+
+  for (let i = 0; i < points.length; i++) {
+    for (let j = i + 1; j < points.length; j++) {
+      const dx = points[i].x - points[j].x;
+      const dy = points[i].y - points[j].y;
+      if (Math.hypot(dx, dy) <= radius) groupOf[find(j)] = find(i);
+    }
+  }
+
+  const groups = new Map<number, T[]>();
+  points.forEach((p, i) => {
+    const root = find(i);
+    groups.set(root, [...(groups.get(root) ?? []), p]);
+  });
+
+  return [...groups.values()].map((items) => ({
+    x: items.reduce((s, p) => s + p.x, 0) / items.length,
+    y: items.reduce((s, p) => s + p.y, 0) / items.length,
+    items,
+  }));
+}
