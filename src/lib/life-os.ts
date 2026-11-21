@@ -206,18 +206,3 @@ export const EDGES: LifeOsEdge[] = [
   { from: "quarterly", to: "album", dashed: true, desktop: "M500 610 L500 650", mobile: "M230 1349 L230 1359 L105 1359 L105 1475" },
   { from: "photos", to: "album", dashed: true, desktop: "M350 680 L400 680", mobile: "M215 1507 L190 1507" },
 ];
-
-export const LOOPS = [
-  {
-    title: "The money loop",
-    body: "Telegram → Hermes → expenses. On the 1st, the server books subscriptions, insurance, allowances and tax, then syncs the month into my finances sheet. I never open a spreadsheet to log anything.",
-  },
-  {
-    title: "The review loop",
-    body: "Daily time tracking feeds a weekly review that's ready before I am. Weeks roll into 12-week quarters, quarters into yearly goals — and each quarter ends with picking photos from Google Photos and printing them for the album.",
-  },
-  {
-    title: "This site is part of it",
-    body: "The map of places I've been and the sidequest list above aren't written here — they're read from the same database, so updating my life updates the site.",
-  },
-];

@@ -6,7 +6,7 @@ import { Sidequests } from "@/components/Sidequests";
 import { Footer } from "@/components/Footer";
 import { PlacesMap } from "@/components/PlacesMap";
 import { LifeOsDiagram } from "@/components/LifeOsDiagram";
-import { INTRO, LOOPS } from "@/lib/life-os";
+import { INTRO } from "@/lib/life-os";
 import { getProjects } from "@/lib/content";
 import { getPlacePins } from "@/lib/places";
 import { getSidequests } from "@/lib/sidequests";
@@ -114,18 +114,6 @@ export default async function HomePage() {
               {INTRO}
             </p>
             <LifeOsDiagram />
-            <div className="mt-10 grid gap-8 sm:grid-cols-3">
-              {LOOPS.map((loop) => (
-                <div key={loop.title}>
-                  <h3 className="text-sm font-medium text-neutral-900">
-                    {loop.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-neutral-600">
-                    {loop.body}
-                  </p>
-                </div>
-              ))}
-            </div>
           </details>
         </section>
 
