@@ -87,7 +87,7 @@ function Node({
           {node.sub}
         </text>
         {node.lines?.map((line, i) => (
-          <text key={line} x={x + 28} y={y + 116 + i * 23} className="fill-teal-900 font-mono" fontSize={12 * fs}>
+          <text key={line} x={x + 28} y={y + 114 + i * 21} className="fill-teal-900 font-mono" fontSize={12 * fs}>
             <tspan className="fill-teal-400">▸ </tspan>
             {line}
           </text>

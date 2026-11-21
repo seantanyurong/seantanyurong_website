@@ -110,3 +110,10 @@ test("the website sits inside a Vercel frame on both layouts", () => {
     );
   }
 });
+
+test("the database lists the tables the review system uses", () => {
+  const tables = NODES.find((n) => n.id === "notion")!.lines ?? [];
+  for (const t of ["weekly_reviews", "quarterly_reviews", "goals"]) {
+    assert.ok(tables.includes(t), `missing table ${t}`);
+  }
+});

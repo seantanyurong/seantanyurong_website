@@ -105,6 +105,7 @@ export const NODES: LifeOsNode[] = [
       "time_tracker",
       "actions",
       "weekly_reviews",
+      "quarterly_reviews",
       "goals",
       "side_quests",
       "travel",
