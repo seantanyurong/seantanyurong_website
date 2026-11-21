@@ -4,6 +4,7 @@ import { useState, type KeyboardEvent } from "react";
 import {
   DESKTOP,
   EDGES,
+  LANES,
   MOBILE,
   NODES,
   type LifeOsNode,
@@ -170,6 +171,20 @@ function Diagram({
           <path d="M0 0 L10 5 L0 10 z" className="fill-neutral-300" />
         </marker>
       </defs>
+
+      {/* Layer headings: inputs, backend, database, interfaces, rituals. */}
+      {LANES.map((lane) => (
+        <text
+          key={lane.label}
+          x={lane[layout].x}
+          y={lane[layout].y}
+          className="fill-neutral-600 font-sans font-medium uppercase"
+          fontSize={layout === "mobile" ? 12.5 : 11}
+          letterSpacing="0.2em"
+        >
+          {lane.label}
+        </text>
+      ))}
 
       {/* Groups first so their children draw on top. */}
       {NODES.filter((n) => n.kind === "group").map((n) => (
