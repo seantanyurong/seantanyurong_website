@@ -32,7 +32,7 @@ export type LifeOsEdge = {
 };
 
 export const INTRO =
-  "My life runs on a small, slightly over-engineered system. Notion is the database. A personal AI agent and an automation server, both on a DigitalOcean droplet, write to it — and a weekly → quarterly → yearly review system reads from it.";
+  "My life runs on a small, slightly over-engineered system, and it's something I'm constantly tweaking. Fundamentally, everything was built around supporting my rituals — daily todos, weekly reviews, monthly financial recaps and quarterly side quest checks. Notion serves as my database, with an AI agent and a server to maintain it, and a variety of interfaces to engage with it, like spreadsheets and dashboards.";
 
 export const NODES: LifeOsNode[] = [
   {
