@@ -1,6 +1,13 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { clusterPoints, formatMonth, parsePins } from "./places-core.ts";
+import {
+  activePin,
+  clusterPoints,
+  clusterRadiusFor,
+  formatMonth,
+  parsePins,
+  pinUiReducer,
+} from "./places-core.ts";
 
 // Builds a page in the shape returned by Notion's data source query API.
 function page(
@@ -135,4 +142,35 @@ test("clusterPoints chains nearby points into one cluster", () => {
   );
   assert.equal(clusters.length, 1);
   assert.equal(clusters[0].items.length, 3);
+});
+
+const closed = { hover: null, focus: null, pinned: null };
+
+test("pinUi: a tap (enter, focus, click) leaves the tooltip open", () => {
+  let s = pinUiReducer(closed, { type: "enter", index: 2 });
+  s = pinUiReducer(s, { type: "focus", index: 2 });
+  s = pinUiReducer(s, { type: "click", index: 2 });
+  assert.equal(activePin(s), 2);
+});
+
+test("pinUi: hovering another pin does not steal keyboard focus after leaving", () => {
+  let s = pinUiReducer(closed, { type: "focus", index: 0 });
+  s = pinUiReducer(s, { type: "enter", index: 1 });
+  assert.equal(activePin(s), 1);
+  s = pinUiReducer(s, { type: "leave", index: 1 });
+  assert.equal(activePin(s), 0);
+});
+
+test("pinUi: dismiss closes everything, a later click reopens", () => {
+  let s = pinUiReducer(closed, { type: "enter", index: 3 });
+  s = pinUiReducer(s, { type: "click", index: 3 });
+  s = pinUiReducer(s, { type: "dismiss" });
+  assert.equal(activePin(s), null);
+  s = pinUiReducer(s, { type: "click", index: 3 });
+  assert.equal(activePin(s), 3);
+});
+
+test("clusterRadiusFor converts a CSS-pixel hit area to SVG units", () => {
+  assert.equal(clusterRadiusFor(960), 24);
+  assert.equal(clusterRadiusFor(320), 72);
 });

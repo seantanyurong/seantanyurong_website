@@ -128,3 +128,51 @@ export function clusterPoints<T extends { x: number; y: number }>(
     items,
   }));
 }
+
+/*
+  Pins are 24 CSS px hit targets; on a map rendered narrower than its SVG
+  width they cover more SVG units, so the cluster radius scales up.
+*/
+export function clusterRadiusFor(
+  renderedWidth: number,
+  svgWidth = 960,
+  hitPx = 24,
+): number {
+  return (hitPx * svgWidth) / Math.max(renderedWidth, 1);
+}
+
+/*
+  Tooltip state. Hover, keyboard focus and tap/click are tracked separately so
+  a touch tap (which fires enter → focus → click) opens and stays open, and a
+  passing mouse doesn't steal a keyboard user's tooltip.
+*/
+export type PinUi = {
+  hover: number | null;
+  focus: number | null;
+  pinned: number | null;
+};
+
+export type PinEvent =
+  | { type: "enter" | "leave" | "focus" | "blur" | "click"; index: number }
+  | { type: "dismiss" };
+
+export function pinUiReducer(state: PinUi, event: PinEvent): PinUi {
+  switch (event.type) {
+    case "enter":
+      return { ...state, hover: event.index };
+    case "leave":
+      return { ...state, hover: state.hover === event.index ? null : state.hover };
+    case "focus":
+      return { ...state, focus: event.index };
+    case "blur":
+      return { ...state, focus: state.focus === event.index ? null : state.focus };
+    case "click":
+      return { ...state, pinned: event.index };
+    case "dismiss":
+      return { hover: null, focus: null, pinned: null };
+  }
+}
+
+export function activePin(state: PinUi): number | null {
+  return state.hover ?? state.focus ?? state.pinned;
+}

@@ -2,13 +2,21 @@ import { parsePins, type Pin } from "./places-core.ts";
 
 /*
   Reads the Notion "Travel DB" data source and returns map pins.
-  Server-only: uses NOTION_TOKEN. Any failure returns [] so the Places
-  section simply hides instead of breaking the build.
+  Server-only: uses NOTION_TOKEN.
+
+  Failure handling:
+  - Missing env vars → [] (section hidden).
+  - Notion error/timeout during `next build` → [] so the build never fails.
+  - Notion error/timeout during runtime revalidation → throw, so Next keeps
+    serving the last successfully generated page instead of one without pins.
 */
 
 const NOTION_VERSION = "2026-03-11";
 
-export async function getPlacePins(pageSize = 100): Promise<Pin[]> {
+export async function getPlacePins({
+  pageSize = 100,
+  timeoutMs = 10_000,
+}: { pageSize?: number; timeoutMs?: number } = {}): Promise<Pin[]> {
   const token = process.env.NOTION_TOKEN;
   const dataSourceId = process.env.NOTION_TRAVEL_DB_ID;
   if (!token || !dataSourceId) return [];
@@ -30,11 +38,11 @@ export async function getPlacePins(pageSize = 100): Promise<Pin[]> {
             page_size: pageSize,
             ...(cursor ? { start_cursor: cursor } : {}),
           }),
+          signal: AbortSignal.timeout(timeoutMs),
         },
       );
       if (!res.ok) {
-        console.error("[places] Notion query failed:", res.status, await res.text());
-        return [];
+        throw new Error(`Notion query failed: ${res.status} ${await res.text()}`);
       }
       const data = await res.json();
       pages.push(...(data.results ?? []));
@@ -43,7 +51,8 @@ export async function getPlacePins(pageSize = 100): Promise<Pin[]> {
 
     return parsePins(pages, new Date().toISOString().slice(0, 10));
   } catch (err) {
-    console.error("[places] Notion query error:", err);
-    return [];
+    console.error("[places]", err);
+    if (process.env.NEXT_PHASE === "phase-production-build") return [];
+    throw err;
   }
 }

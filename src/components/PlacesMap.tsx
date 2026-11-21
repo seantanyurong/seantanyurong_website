@@ -3,18 +3,16 @@ import { feature } from "topojson-client";
 import type { Topology, GeometryCollection } from "topojson-specification";
 import type { FeatureCollection } from "geojson";
 import countries110m from "world-atlas/countries-110m.json";
-import { clusterPoints, type Pin } from "@/lib/places-core";
-import { PlacesMapPins, type MapCluster } from "./PlacesMapPins";
+import type { Pin } from "@/lib/places-core";
+import { PlacesMapPins, type MapPoint } from "./PlacesMapPins";
 
 /*
   Places map — a static world SVG drawn on the server (no tiles, no API key),
-  with an interactive pin overlay. Pins that would overlap at this scale are
-  merged into one cluster whose tooltip lists every place in it.
+  with an interactive pin overlay. The overlay clusters pins that would
+  overlap at the map's rendered width.
 */
 
 const WIDTH = 960;
-// Pins closer than this (in SVG units) would overlap, so they share a dot.
-const CLUSTER_RADIUS = 14;
 
 const topology = countries110m as unknown as Topology<{
   countries: GeometryCollection;
@@ -32,18 +30,10 @@ const HEIGHT = Math.ceil(path.bounds(land)[1][1]);
 const countryPaths = land.features.map((f) => path(f) ?? "");
 
 export function PlacesMap({ pins }: { pins: Pin[] }) {
-  const projected = pins.flatMap((pin) => {
-    const xy = projection([pin.lng, pin.lat]);
-    return xy ? [{ ...pin, x: xy[0], y: xy[1] }] : [];
+  const points: MapPoint[] = pins.flatMap(({ key, lng, lat, visits }) => {
+    const xy = projection([lng, lat]);
+    return xy ? [{ key, visits, x: xy[0], y: xy[1] }] : [];
   });
-
-  const clusters: MapCluster[] = clusterPoints(projected, CLUSTER_RADIUS).map(
-    (c) => ({
-      left: (c.x / WIDTH) * 100,
-      top: (c.y / HEIGHT) * 100,
-      pins: c.items.map(({ key, label, visits }) => ({ key, label, visits })),
-    }),
-  );
 
   return (
     <div className="relative">
@@ -62,7 +52,7 @@ export function PlacesMap({ pins }: { pins: Pin[] }) {
           />
         ))}
       </svg>
-      <PlacesMapPins clusters={clusters} />
+      <PlacesMapPins points={points} width={WIDTH} height={HEIGHT} />
     </div>
   );
 }

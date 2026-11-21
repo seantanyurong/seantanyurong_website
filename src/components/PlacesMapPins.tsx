@@ -1,18 +1,32 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { formatMonth, type Pin } from "@/lib/places-core";
+import { useEffect, useMemo, useReducer, useRef, useState } from "react";
+import {
+  activePin,
+  clusterPoints,
+  clusterRadiusFor,
+  formatMonth,
+  pinUiReducer,
+  type Pin,
+} from "@/lib/places-core";
 
 /*
   Interactive pin overlay for PlacesMap. Each cluster is a focusable button
   positioned in % over the SVG. Hover, keyboard focus, or tap shows a tooltip
   with the trip name and when Sean went; Escape or tapping elsewhere hides it.
+  Points are clustered by the map's measured width so 24px hit targets never
+  overlap (e.g. on a phone most of SE Asia becomes one dot).
 */
 
-export type MapCluster = {
+export type MapPoint = Pick<Pin, "key" | "visits"> & {
+  x: number; // SVG units
+  y: number;
+};
+
+type MapCluster = {
   left: number; // % of map width
   top: number; // % of map height
-  pins: Pick<Pin, "key" | "label" | "visits">[];
+  pins: MapPoint[];
 };
 
 function visitLine(heading: string, v: Pin["visits"][number]) {
@@ -34,18 +48,60 @@ function describe(cluster: MapCluster) {
     .join("; ");
 }
 
-export function PlacesMapPins({ clusters }: { clusters: MapCluster[] }) {
-  const [active, setActive] = useState<number | null>(null);
+export function PlacesMapPins({
+  points,
+  width,
+  height,
+}: {
+  points: MapPoint[];
+  width: number;
+  height: number;
+}) {
   const rootRef = useRef<HTMLDivElement>(null);
+  // Server render assumes the map is drawn at its SVG width; re-measured below.
+  const [renderedWidth, setRenderedWidth] = useState(width);
+  const [ui, dispatch] = useReducer(pinUiReducer, {
+    hover: null,
+    focus: null,
+    pinned: null,
+  });
+  const active = activePin(ui);
+
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) =>
+      setRenderedWidth(entry.contentRect.width),
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const clusters: MapCluster[] = useMemo(
+    () =>
+      clusterPoints(points, clusterRadiusFor(renderedWidth, width)).map(
+        (c) => ({
+          left: (c.x / width) * 100,
+          top: (c.y / height) * 100,
+          pins: c.items,
+        }),
+      ),
+    [points, renderedWidth, width, height],
+  );
+
+  // Cluster indices change when the map is resized; close any open tooltip.
+  useEffect(() => dispatch({ type: "dismiss" }), [clusters]);
 
   // Tap/click outside the pins or press Escape to dismiss.
   useEffect(() => {
     if (active === null) return;
     const onPointerDown = (e: PointerEvent) => {
-      if (!rootRef.current?.contains(e.target as Node)) setActive(null);
+      if (!rootRef.current?.contains(e.target as Node)) {
+        dispatch({ type: "dismiss" });
+      }
     };
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setActive(null);
+      if (e.key === "Escape") dispatch({ type: "dismiss" });
     };
     document.addEventListener("pointerdown", onPointerDown);
     document.addEventListener("keydown", onKeyDown);
@@ -74,16 +130,16 @@ export function PlacesMapPins({ clusters }: { clusters: MapCluster[] }) {
             key={cluster.pins.map((p) => p.key).join("|")}
             className={`absolute -translate-x-1/2 -translate-y-1/2 ${isActive ? "z-20" : "z-10"}`}
             style={{ left: `${cluster.left}%`, top: `${cluster.top}%` }}
-            onMouseEnter={() => setActive(i)}
-            onMouseLeave={() => setActive((cur) => (cur === i ? null : cur))}
+            onMouseEnter={() => dispatch({ type: "enter", index: i })}
+            onMouseLeave={() => dispatch({ type: "leave", index: i })}
           >
             <button
               type="button"
               aria-label={describe(cluster)}
               aria-expanded={isActive}
-              onFocus={() => setActive(i)}
-              onBlur={() => setActive((cur) => (cur === i ? null : cur))}
-              onClick={() => setActive((cur) => (cur === i ? null : i))}
+              onFocus={() => dispatch({ type: "focus", index: i })}
+              onBlur={() => dispatch({ type: "blur", index: i })}
+              onClick={() => dispatch({ type: "click", index: i })}
               className="group/pin flex h-6 w-6 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
             >
               <span
