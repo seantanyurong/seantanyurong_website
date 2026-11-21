@@ -4,12 +4,18 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { ProjectsGrid } from "@/components/ProjectsGrid";
 import { Sidequests } from "@/components/Sidequests";
 import { Footer } from "@/components/Footer";
+import { PlacesMap } from "@/components/PlacesMap";
 import { getProjects, getSidequests } from "@/lib/content";
+import { getPlacePins } from "@/lib/places";
+
+// Re-fetch trips from Notion at most once a day.
+export const revalidate = 86400;
 
 export default async function HomePage() {
-  const [projects, sidequests] = await Promise.all([
+  const [projects, sidequests, pins] = await Promise.all([
     getProjects(),
     getSidequests(),
+    getPlacePins(),
   ]);
 
   return (
@@ -65,6 +71,26 @@ export default async function HomePage() {
             <Sidequests items={sidequests} />
           </details>
         </section>
+
+        {pins.length > 0 && (
+          <section id="places" className="scroll-mt-24 pb-20">
+            <details
+              open
+              className="group/section [&_summary::-webkit-details-marker]:hidden"
+            >
+              <summary className="mb-8 cursor-pointer list-none rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-blue-300">
+                <SectionHeading
+                  eyebrow="Been there"
+                  title="Places"
+                  accent="teal"
+                  count={pins.length}
+                  collapsible
+                />
+              </summary>
+              <PlacesMap pins={pins} />
+            </details>
+          </section>
+        )}
 
         <Footer />
       </main>
