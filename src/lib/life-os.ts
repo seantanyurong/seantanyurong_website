@@ -30,7 +30,7 @@ export type LifeOsEdge = {
 };
 
 export const INTRO =
-  "My life runs on a small, slightly over-engineered system. Notion is the database. A droplet running an AI agent and my own cron server writes to it, and a weekly → quarterly → yearly review loop reads from it.";
+  "My life runs on a small, slightly over-engineered system. Notion is the database. A droplet running my personal assistant and my own cron server writes to it, and a weekly → quarterly → yearly review loop reads from it.";
 
 export const NODES: LifeOsNode[] = [
   {
@@ -66,9 +66,9 @@ export const NODES: LifeOsNode[] = [
     id: "hermes",
     kind: "box",
     label: "hermes",
-    sub: "AI agent · Telegram ↔ Notion",
+    sub: "personal assistant · Telegram",
     description:
-      "An off-the-shelf Hermes agent connected to Notion. I message it on Telegram and it logs expenses and keeps my budget up to date.",
+      "My personal assistant. I text it on Telegram like I would a person — it logs my expenses, keeps my budget up to date and reads or writes anything else in Notion for me.",
     desktop: { x: 45, y: 135, w: 320, h: 80 },
     mobile: { x: 30, y: 125, w: 315, h: 80 },
   },
