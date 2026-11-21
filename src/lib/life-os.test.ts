@@ -30,11 +30,12 @@ test("every edge has a path for both layouts", () => {
 test("covers the parts Sean asked for", () => {
   for (const id of [
     "droplet", "hermes", "server", "telegram", "notion", "sheet",
-    "website", "weekly", "quarterly", "yearly", "album", "photos",
+    "website", "weekly", "quarterly", "yearly", "album", "photos", "dashboard",
   ]) {
     assert.ok(ids.has(id), `missing ${id}`);
   }
   assert.ok(EDGES.some((e) => e.from === "notion" && e.to === "reviews"));
+  assert.ok(EDGES.some((e) => e.from === "notion" && e.to === "dashboard"));
   assert.ok(!EDGES.some((e) => e.from === "notion" && e.to === "weekly"));
   assert.ok(EDGES.some((e) => e.from === "weekly" && e.to === "quarterly"));
   assert.ok(EDGES.some((e) => e.from === "quarterly" && e.to === "yearly"));
@@ -69,6 +70,24 @@ test("the review system box contains weekly, quarterly and yearly on both layout
     for (const id of ["album", "photos"]) {
       const r = byId[id][layout];
       assert.ok(r.y >= outer.y + outer.h, `${id} should sit below the review box on ${layout}`);
+    }
+  }
+});
+
+test("no two boxes overlap (except boxes inside their group)", () => {
+  const inside = (a: { x: number; y: number; w: number; h: number }, b: typeof a) =>
+    a.x >= b.x && a.y >= b.y && a.x + a.w <= b.x + b.w && a.y + a.h <= b.y + b.h;
+  for (const layout of ["desktop", "mobile"] as const) {
+    for (const a of NODES) {
+      for (const b of NODES) {
+        if (a.id >= b.id) continue;
+        const ra = a[layout];
+        const rb = b[layout];
+        if (inside(ra, rb) || inside(rb, ra)) continue;
+        const overlap =
+          ra.x < rb.x + rb.w && rb.x < ra.x + ra.w && ra.y < rb.y + rb.h && rb.y < ra.y + ra.h;
+        assert.ok(!overlap, `${a.id} overlaps ${b.id} on ${layout}`);
+      }
     }
   }
 });
