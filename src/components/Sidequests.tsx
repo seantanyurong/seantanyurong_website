@@ -1,8 +1,9 @@
-import type { Sidequest } from "@/lib/content";
+import type { Sidequest } from "@/lib/sidequests-core";
 
 /*
   Sidequests — two-column rows: title (left) — status (right, muted).
-  No links: these are aspirational. Sorted in the loader by status + recency.
+  No links: these are aspirational. Sourced from Notion and sorted in the
+  loader by status + recency.
 */
 
 function stripPrefix(title: string) {
