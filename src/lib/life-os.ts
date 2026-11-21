@@ -71,10 +71,10 @@ export const NODES: LifeOsNode[] = [
       "weekdays → time trackers",
       "saturdays → weekly review page",
       "1st → subs, insurance, allowances, tax",
-      "1st → sync planner sheet",
+      "1st → sync finances sheet",
     ],
     description:
-      "My own Node server running cron jobs: it creates each weekday's time-tracker pages, sets up Saturday's weekly review, books recurring expenses on the 1st, then syncs the month into my planner.",
+      "My own Node server running cron jobs: it creates each weekday's time-tracker pages, sets up Saturday's weekly review, books recurring expenses on the 1st, then syncs the month into my finances sheet.",
     desktop: { x: 45, y: 240, w: 320, h: 160 },
     mobile: { x: 30, y: 230, w: 315, h: 190 },
   },
@@ -105,8 +105,8 @@ export const NODES: LifeOsNode[] = [
   {
     id: "sheet",
     kind: "box",
-    label: "FIRE planner",
-    sub: "Google Sheets · monthly",
+    label: "My Finances",
+    sub: "Google Sheets",
     description:
       "My long-term financial planner. On the 1st of every month the server totals last month's expenses by category and writes them into the sheet.",
     desktop: { x: 740, y: 110, w: 240, h: 80 },
@@ -116,7 +116,7 @@ export const NODES: LifeOsNode[] = [
     id: "website",
     kind: "box",
     label: "seantanyurong.com",
-    sub: "this site · daily",
+    sub: "this site",
     description:
       "You're looking at it. The Places map and Sidequests read straight from the same database, refreshed daily.",
     desktop: { x: 740, y: 300, w: 240, h: 80 },
@@ -199,7 +199,7 @@ export const EDGES: LifeOsEdge[] = [
 export const LOOPS = [
   {
     title: "The money loop",
-    body: "Telegram → Hermes → expenses. On the 1st, the server books subscriptions, insurance, allowances and tax, then syncs the month into my FIRE planner. I never open a spreadsheet to log anything.",
+    body: "Telegram → Hermes → expenses. On the 1st, the server books subscriptions, insurance, allowances and tax, then syncs the month into my finances sheet. I never open a spreadsheet to log anything.",
   },
   {
     title: "The review loop",
