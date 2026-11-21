@@ -238,3 +238,11 @@ test("a stop works even when its trip has no Location of its own", () => {
   assert.equal(pins.length, 1);
   assert.equal(pins[0].visits[0].trip, "US road trip");
 });
+
+test("reads the trip name from the title column whatever it is called", () => {
+  const p = page("Hanoi & Sapa", "2025-08-22", hanoi);
+  const { Place, ...rest } = p.properties;
+  const renamed = { ...p, properties: { ...rest, "Trip Name": Place } };
+  const pins = parsePins([renamed], TODAY);
+  assert.equal(pins[0].visits[0].trip, "Hanoi & Sapa");
+});

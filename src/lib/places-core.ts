@@ -41,7 +41,13 @@ function parseTrip(page: any): (Visit & { place: Place | null }) | null {
   const departure: unknown = props?.["Departure Date"]?.date?.start;
   if (typeof departure !== "string") return null;
 
-  const titleParts: { plain_text?: string }[] = props?.Place?.title ?? [];
+  // The title column may be renamed in Notion ("Place" → "Trip Name"), so
+  // find it by type rather than by name.
+  const titleProp = Object.values(props ?? {}).find(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (p: any) => p?.type === "title",
+  ) as { title?: { plain_text?: string }[] } | undefined;
+  const titleParts = titleProp?.title ?? [];
   const trip = titleParts.map((t) => t.plain_text ?? "").join("").trim();
   const tripType: unknown = props?.["Trip Type"]?.select?.name;
   const place = parsePlace(props?.Location);
