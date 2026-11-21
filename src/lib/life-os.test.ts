@@ -30,12 +30,16 @@ test("every edge has a path for both layouts", () => {
 test("covers the parts Sean asked for", () => {
   for (const id of [
     "droplet", "hermes", "server", "telegram", "notion", "sheet",
-    "website", "weekly", "quarterly", "yearly", "album", "photos", "dashboard",
+    "website", "weekly", "quarterly", "yearly", "album", "photos", "dashboard", "calendar",
   ]) {
     assert.ok(ids.has(id), `missing ${id}`);
   }
   assert.ok(EDGES.some((e) => e.from === "notion" && e.to === "reviews"));
   assert.ok(EDGES.some((e) => e.from === "notion" && e.to === "dashboard"));
+  assert.ok(
+    EDGES.some((e) => e.from === "calendar" && e.to === "hermes" && e.twoWay),
+    "calendar <-> hermes should be two-way",
+  );
   assert.ok(!EDGES.some((e) => e.from === "notion" && e.to === "weekly"));
   assert.ok(EDGES.some((e) => e.from === "weekly" && e.to === "quarterly"));
   assert.ok(EDGES.some((e) => e.from === "quarterly" && e.to === "yearly"));

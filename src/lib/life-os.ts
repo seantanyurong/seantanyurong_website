@@ -16,6 +16,7 @@ export type LifeOsNode = {
   label: string;
   sub?: string;
   lines?: string[]; // extra monospace lines (cron jobs, tables)
+  labelAt?: "top" | "bottom"; // groups: where the caption sits (default top)
   description: string;
   desktop: Rect;
   mobile: Rect;
@@ -25,6 +26,7 @@ export type LifeOsEdge = {
   from: string;
   to: string;
   dashed?: boolean; // drawn by hand, not automated
+  twoWay?: boolean; // reads and writes
   desktop: string; // SVG path
   mobile: string;
 };
@@ -44,12 +46,22 @@ export const NODES: LifeOsNode[] = [
     mobile: { x: 20, y: 10, w: 170, h: 40 },
   },
   {
+    id: "calendar",
+    kind: "pill",
+    label: "Google Calendar",
+    description:
+      "My schedule. Hermes can read and add events, so “what's on Thursday?” or “book dinner Friday 7pm” works straight from Telegram.",
+    desktop: { x: 220, y: 20, w: 170, h: 40 },
+    mobile: { x: 210, y: 10, w: 170, h: 40 },
+  },
+  {
     id: "droplet",
     kind: "group",
     label: "DigitalOcean droplet",
+    labelAt: "bottom",
     description:
       "A small always-on server. It hosts the two things that write to my database for me.",
-    desktop: { x: 20, y: 90, w: 370, h: 330 },
+    desktop: { x: 20, y: 90, w: 370, h: 345 },
     mobile: { x: 10, y: 80, w: 380, h: 380 },
   },
   {
@@ -58,7 +70,7 @@ export const NODES: LifeOsNode[] = [
     label: "hermes",
     sub: "personal AI agent",
     description:
-      "My personal assistant. I text it on Telegram like I would a person — it logs my expenses, keeps my budget up to date and reads or writes anything else in Notion for me.",
+      "My personal assistant. I text it on Telegram like I would a person — it logs my expenses, keeps my budget up to date, manages my calendar and reads or writes anything else in Notion for me.",
     desktop: { x: 45, y: 135, w: 320, h: 80 },
     mobile: { x: 30, y: 125, w: 315, h: 80 },
   },
@@ -194,9 +206,10 @@ export const NODES: LifeOsNode[] = [
 ];
 
 export const EDGES: LifeOsEdge[] = [
+  { from: "calendar", to: "hermes", twoWay: true, desktop: "M305 60 L305 135", mobile: "M295 50 L295 125" },
   { from: "telegram", to: "hermes", desktop: "M120 60 L120 135", mobile: "M105 50 L105 125" },
-  { from: "hermes", to: "notion", desktop: "M365 175 L450 175", mobile: "M345 165 C374 165 374 480 300 522" },
-  { from: "server", to: "notion", desktop: "M365 320 L450 320", mobile: "M187 420 L187 520" },
+  { from: "hermes", to: "notion", desktop: "M365 175 L450 175", mobile: "M345 165 L375 165 L375 500 L300 500 L300 522" },
+  { from: "server", to: "notion", desktop: "M365 320 L450 320", mobile: "M120 420 L120 522" },
   { from: "notion", to: "sheet", desktop: "M670 120 L740 120", mobile: "M60 900 L30 900 L30 995 L50 995" },
   { from: "notion", to: "dashboard", desktop: "M670 240 L740 240", mobile: "M60 900 L30 900 L30 1085 L50 1085" },
   { from: "notion", to: "website", desktop: "M670 360 L740 360", mobile: "M60 900 L30 900 L30 1175 L50 1175" },

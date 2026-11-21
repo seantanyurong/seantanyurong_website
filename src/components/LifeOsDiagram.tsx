@@ -56,7 +56,14 @@ function Node({
           className={`frame fill-neutral-50 ${active ? "stroke-lime-500" : "stroke-neutral-200"}`}
           x={x} y={y} width={w} height={h} rx={16} strokeWidth={1.5}
         />
-        <text x={x + w - 16} y={y + 26} textAnchor="end" className="fill-neutral-400 font-sans uppercase" fontSize={11 * fs} letterSpacing="0.16em">
+        <text
+          x={x + w - 24}
+          y={node.labelAt === "bottom" ? y + h - 12 : y + 26}
+          textAnchor="end"
+          className="fill-neutral-400 font-sans uppercase"
+          fontSize={11 * fs}
+          letterSpacing="0.16em"
+        >
           {node.label}
         </text>
       </g>
@@ -107,7 +114,7 @@ function Node({
       {isPill ? (
         <text x={x + w / 2} y={y + h / 2 + 5} textAnchor="middle" className="fill-neutral-700 font-sans" fontSize={13 * fs}>
           {node.label}
-          <tspan className="fill-neutral-400"> · {node.sub}</tspan>
+          {node.sub && <tspan className="fill-neutral-400"> · {node.sub}</tspan>}
         </text>
       ) : (
         <>
@@ -169,7 +176,9 @@ function Diagram({
         return (
           <g key={`${e.from}-${e.to}`} aria-hidden>
             <path
-              d={d} fill="none" markerEnd={`url(#${markerId})`} strokeWidth={1.5}
+              d={d} fill="none" strokeWidth={1.5}
+              markerEnd={`url(#${markerId})`}
+              markerStart={e.twoWay ? `url(#${markerId})` : undefined}
               strokeDasharray={e.dashed ? "4 5" : undefined}
               className={e.dashed ? "stroke-amber-400" : lit ? "stroke-teal-300" : "stroke-neutral-200"}
             />
