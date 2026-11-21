@@ -71,7 +71,7 @@ test("groups repeat visits into one pin, newest first", () => {
     ["2025-10-24", "2025-04-18"],
   );
   assert.equal(pins[0].visits[0].trip, "Bangkok");
-  assert.equal(pins[0].visits[0].tripType, "Solo");
+  assert.deepEqual(pins[0].visits[0], { trip: "Bangkok", departure: "2025-10-24" });
 });
 
 test("skips rows without location or departure", () => {
@@ -98,9 +98,9 @@ test("orders pins by most recent visit first", () => {
   assert.deepEqual(pins.map((p) => p.label), ["London", "Taipei"]);
 });
 
-test("allows a missing trip type", () => {
-  const pins = parsePins([page("Bangkok", "2025-04-18", bangkok)], TODAY);
-  assert.equal(pins[0].visits[0].tripType, null);
+test("never exposes Trip Type", () => {
+  const pins = parsePins([page("Bangkok", "2025-04-18", bangkok, "Solo")], TODAY);
+  assert.ok(!JSON.stringify(pins).includes("Solo"));
 });
 
 test("never exposes Travel Group", () => {
@@ -112,9 +112,9 @@ test("ignores malformed rows instead of throwing", () => {
   assert.deepEqual(parsePins([null, {}, { properties: null }], TODAY), []);
 });
 
-test("formatMonth renders short month and year", () => {
-  assert.equal(formatMonth("2025-10-24"), "Oct 2025");
-  assert.equal(formatMonth("2026-01-01"), "Jan 2026");
+test("formatMonth renders short month and two-digit year", () => {
+  assert.equal(formatMonth("2025-10-24"), "Oct '25");
+  assert.equal(formatMonth("2026-01-01"), "Jan '26");
 });
 
 test("clusterPoints merges points within the radius and keeps far ones apart", () => {
@@ -205,7 +205,7 @@ test("stops add a pin per extra city, carrying the trip's name and date", () => 
   assert.deepEqual(pins.map((p) => p.label).sort(), ["Hanoi", "Sa Pa"]);
   const sapaPin = pins.find((p) => p.label === "Sa Pa")!;
   assert.deepEqual(sapaPin.visits, [
-    { trip: "Hanoi & Sapa", departure: "2025-08-22", tripType: "Couple" },
+    { trip: "Hanoi & Sapa", departure: "2025-08-22" },
   ]);
 });
 

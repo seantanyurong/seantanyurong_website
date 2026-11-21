@@ -2,14 +2,13 @@
   Pure helpers that turn rows from the Notion "Travel DB" into map pins.
   No imports so the Node test runner can load this file directly.
 
-  Only Place, Departure Date, Trip Type and Location are read — Travel Group
-  names friends and family and must never reach the public site.
+  Only the title, Departure Date and Location are read — Travel Group names
+  friends and family and must never reach the public site.
 */
 
 export type Visit = {
   trip: string;
   departure: string; // YYYY-MM-DD
-  tripType: string | null;
 };
 
 export type Pin = {
@@ -49,13 +48,11 @@ function parseTrip(page: any): (Visit & { place: Place | null }) | null {
   ) as { title?: { plain_text?: string }[] } | undefined;
   const titleParts = titleProp?.title ?? [];
   const trip = titleParts.map((t) => t.plain_text ?? "").join("").trim();
-  const tripType: unknown = props?.["Trip Type"]?.select?.name;
   const place = parsePlace(props?.Location);
 
   return {
     trip: trip || place?.name || "Trip",
     departure: departure.slice(0, 10),
-    tripType: typeof tripType === "string" ? tripType : null,
     place,
   };
 }
@@ -125,11 +122,13 @@ export function parsePins(
   return result.sort((a, b) => byNewest(a.visits[0], b.visits[0]));
 }
 
+// "2025-10-24" → "Oct '25"
 export function formatMonth(iso: string): string {
-  return new Date(`${iso.slice(0, 10)}T00:00:00Z`).toLocaleDateString(
+  const month = new Date(`${iso.slice(0, 10)}T00:00:00Z`).toLocaleDateString(
     "en-US",
-    { month: "short", year: "numeric", timeZone: "UTC" },
+    { month: "short", timeZone: "UTC" },
   );
+  return `${month} '${iso.slice(2, 4)}`;
 }
 
 export type Cluster<T> = { x: number; y: number; items: T[] };
