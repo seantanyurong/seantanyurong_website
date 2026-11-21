@@ -266,7 +266,7 @@ export function PlacesMapView({
         <button
           type="button"
           onClick={() => setTarget(full)}
-          className="absolute top-2 left-2 z-30 rounded-full border border-neutral-200 bg-white/80 px-3 py-1 text-sm tracking-tight text-neutral-500 shadow-sm backdrop-blur-md transition-colors hover:text-neutral-900 focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:outline-none"
+          className="absolute bottom-2 left-2 z-30 rounded-full border border-neutral-200 bg-white/80 px-3 py-1 text-sm tracking-tight text-neutral-500 shadow-sm backdrop-blur-md transition-colors hover:text-neutral-900 focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:outline-none"
         >
           ← World
         </button>
