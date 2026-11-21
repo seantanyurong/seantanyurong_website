@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { EDGES, INTRO, LANES, NODES } from "./life-os.ts";
+import { EDGES, INTRO, NODES } from "./life-os.ts";
 
 const ids = new Set(NODES.map((n) => n.id));
 
@@ -108,22 +108,5 @@ test("the website sits inside a Vercel frame on both layouts", () => {
       r.x >= o.x && r.y >= o.y && r.x + r.w <= o.x + o.w && r.y + r.h <= o.y + o.h,
       `website sticks out of the vercel frame on ${layout}`,
     );
-  }
-});
-
-test("lane headings label each layer and never sit inside a box", () => {
-  assert.deepEqual(
-    LANES.map((l) => l.label),
-    ["Inputs", "Backend", "Database", "Interfaces", "Rituals"],
-  );
-  for (const layout of ["desktop", "mobile"] as const) {
-    for (const lane of LANES) {
-      const { x, y } = lane[layout];
-      for (const n of NODES) {
-        const r = n[layout];
-        const inside = x >= r.x && x <= r.x + r.w && y - 10 >= r.y && y <= r.y + r.h;
-        assert.ok(!inside, `${lane.label} heading sits inside ${n.id} on ${layout}`);
-      }
-    }
   }
 });
