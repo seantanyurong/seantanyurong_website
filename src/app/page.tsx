@@ -77,26 +77,6 @@ export default async function HomePage() {
           </section>
         )}
 
-        {pins.length > 0 && (
-          <section id="places" className="scroll-mt-24 pb-20">
-            <details
-              open
-              className="group/section [&_summary::-webkit-details-marker]:hidden"
-            >
-              <summary className="mb-8 cursor-pointer list-none rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-blue-300">
-                <SectionHeading
-                  eyebrow="Been there"
-                  title="Places"
-                  accent="teal"
-                  count={pins.length}
-                  collapsible
-                />
-              </summary>
-              <PlacesMap pins={pins} />
-            </details>
-          </section>
-        )}
-
         <section id="life-os" className="scroll-mt-24 pb-20">
           <details
             open
@@ -116,6 +96,26 @@ export default async function HomePage() {
             <LifeOsDiagram />
           </details>
         </section>
+
+        {pins.length > 0 && (
+          <section id="places" className="scroll-mt-24 pb-20">
+            <details
+              open
+              className="group/section [&_summary::-webkit-details-marker]:hidden"
+            >
+              <summary className="mb-8 cursor-pointer list-none rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-blue-300">
+                <SectionHeading
+                  eyebrow="Been there"
+                  title="Places"
+                  accent="teal"
+                  count={pins.length}
+                  collapsible
+                />
+              </summary>
+              <PlacesMap pins={pins} />
+            </details>
+          </section>
+        )}
 
         <Footer />
       </main>

@@ -13,8 +13,8 @@ const items: NavItem[] = [
   { id: "top", label: "Home" },
   { id: "projects", label: "Projects" },
   { id: "sidequests", label: "Sidequests" },
-  { id: "places", label: "Places" },
   { id: "life-os", label: "Life OS" },
+  { id: "places", label: "Places" },
 ];
 
 export function Nav() {
