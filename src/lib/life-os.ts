@@ -44,16 +44,6 @@ export const NODES: LifeOsNode[] = [
     mobile: { x: 20, y: 10, w: 170, h: 40 },
   },
   {
-    id: "github",
-    kind: "pill",
-    label: "GitHub",
-    sub: "push → deploy",
-    description:
-      "Every push to the server repo redeploys it to the droplet automatically.",
-    desktop: { x: 220, y: 20, w: 150, h: 40 },
-    mobile: { x: 210, y: 10, w: 170, h: 40 },
-  },
-  {
     id: "droplet",
     kind: "group",
     label: "DigitalOcean droplet",
@@ -133,6 +123,15 @@ export const NODES: LifeOsNode[] = [
     mobile: { x: 220, y: 960, w: 170, h: 80 },
   },
   {
+    id: "reviews",
+    kind: "group",
+    label: "Review system",
+    description:
+      "How I close the loop. Every week, quarter and year I step back, look at what the database says I actually did, and decide what's next.",
+    desktop: { x: 20, y: 495, w: 960, h: 135 },
+    mobile: { x: 10, y: 1085, w: 380, h: 205 },
+  },
+  {
     id: "weekly",
     kind: "box",
     label: "Weekly review",
@@ -140,7 +139,7 @@ export const NODES: LifeOsNode[] = [
     description:
       "Every Saturday a review page is already waiting, with my hours per project tallied from the time tracker. I fill in wins, goal progress and a reflection.",
     desktop: { x: 40, y: 540, w: 240, h: 70 },
-    mobile: { x: 20, y: 1110, w: 170, h: 64 },
+    mobile: { x: 25, y: 1125, w: 165, h: 64 },
   },
   {
     id: "quarterly",
@@ -150,7 +149,7 @@ export const NODES: LifeOsNode[] = [
     description:
       "Every 12 weeks: did I finish the side quest? What worked, what changes next quarter?",
     desktop: { x: 380, y: 540, w: 240, h: 70 },
-    mobile: { x: 210, y: 1110, w: 170, h: 64 },
+    mobile: { x: 210, y: 1125, w: 165, h: 64 },
   },
   {
     id: "yearly",
@@ -160,7 +159,7 @@ export const NODES: LifeOsNode[] = [
     description:
       "The one-year and life goals that every quarter rolls up to.",
     desktop: { x: 720, y: 540, w: 240, h: 70 },
-    mobile: { x: 210, y: 1210, w: 170, h: 64 },
+    mobile: { x: 210, y: 1210, w: 165, h: 64 },
   },
   {
     id: "album",
@@ -170,7 +169,7 @@ export const NODES: LifeOsNode[] = [
     description:
       "The one offline part. Each quarter I pick the best photos from Google Photos and print them into a physical album — so the year is something I can hold, not just rows in a database.",
     desktop: { x: 400, y: 650, w: 200, h: 60 },
-    mobile: { x: 20, y: 1210, w: 170, h: 64 },
+    mobile: { x: 20, y: 1315, w: 170, h: 64 },
   },
   {
     id: "photos",
@@ -180,22 +179,21 @@ export const NODES: LifeOsNode[] = [
     description:
       "Where every photo I take ends up. At each quarterly review I go through the quarter here and pick the ones worth printing.",
     desktop: { x: 150, y: 650, w: 200, h: 60 },
-    mobile: { x: 20, y: 1310, w: 170, h: 64 },
+    mobile: { x: 215, y: 1315, w: 170, h: 64 },
   },
 ];
 
 export const EDGES: LifeOsEdge[] = [
   { from: "telegram", to: "hermes", desktop: "M120 60 L120 135", mobile: "M105 50 L105 125" },
-  { from: "github", to: "droplet", desktop: "M295 60 L295 90", mobile: "M295 50 L295 80" },
   { from: "hermes", to: "notion", desktop: "M365 175 L450 175", mobile: "M345 165 C374 165 374 480 300 522" },
   { from: "server", to: "notion", desktop: "M365 320 L450 320", mobile: "M187 420 L187 520" },
   { from: "notion", to: "sheet", desktop: "M670 150 L740 150", mobile: "M140 920 L100 960" },
   { from: "notion", to: "website", desktop: "M670 340 L740 340", mobile: "M260 920 L300 960" },
-  { from: "notion", to: "weekly", desktop: "M520 460 C520 505 160 495 160 540", mobile: "M200 920 L200 1085 L105 1085 L105 1110" },
-  { from: "weekly", to: "quarterly", desktop: "M280 575 L380 575", mobile: "M190 1142 L210 1142" },
-  { from: "quarterly", to: "yearly", desktop: "M620 575 L720 575", mobile: "M295 1174 L295 1210" },
-  { from: "quarterly", to: "album", dashed: true, desktop: "M500 610 L500 650", mobile: "M240 1174 L140 1210" },
-  { from: "photos", to: "album", dashed: true, desktop: "M350 680 L400 680", mobile: "M105 1310 L105 1274" },
+  { from: "notion", to: "reviews", desktop: "M560 460 L560 495", mobile: "M200 920 L200 1085" },
+  { from: "weekly", to: "quarterly", desktop: "M280 575 L380 575", mobile: "M190 1157 L210 1157" },
+  { from: "quarterly", to: "yearly", desktop: "M620 575 L720 575", mobile: "M292 1189 L292 1210" },
+  { from: "quarterly", to: "album", dashed: true, desktop: "M500 610 L500 650", mobile: "M230 1189 L230 1199 L105 1199 L105 1315" },
+  { from: "photos", to: "album", dashed: true, desktop: "M350 680 L400 680", mobile: "M215 1347 L190 1347" },
 ];
 
 export const LOOPS = [

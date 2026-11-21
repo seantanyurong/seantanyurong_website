@@ -34,6 +34,8 @@ test("covers the parts Sean asked for", () => {
   ]) {
     assert.ok(ids.has(id), `missing ${id}`);
   }
+  assert.ok(EDGES.some((e) => e.from === "notion" && e.to === "reviews"));
+  assert.ok(!EDGES.some((e) => e.from === "notion" && e.to === "weekly"));
   assert.ok(EDGES.some((e) => e.from === "weekly" && e.to === "quarterly"));
   assert.ok(EDGES.some((e) => e.from === "quarterly" && e.to === "yearly"));
   assert.ok(EDGES.some((e) => e.from === "quarterly" && e.to === "album" && e.dashed));
@@ -47,4 +49,26 @@ test("copy never leaks ids, money amounts or private pages", () => {
   assert.doesNotMatch(copy, /\$\s?\d{3,}|\d{3,}\.\d{2}/, "looks like a real amount");
   assert.doesNotMatch(copy, /girlfriend|housing|proposal|milestone/i);
   assert.doesNotMatch(copy, /\b\d{1,3}(\.\d{1,3}){3}\b/, "looks like an IP address");
+});
+
+test("the review system box contains weekly, quarterly and yearly on both layouts", () => {
+  const byId = Object.fromEntries(NODES.map((n) => [n.id, n]));
+  const box = byId.reviews;
+  assert.ok(box, "missing reviews box");
+  assert.equal(box.kind, "group");
+  for (const layout of ["desktop", "mobile"] as const) {
+    const outer = box[layout];
+    for (const id of ["weekly", "quarterly", "yearly"]) {
+      const r = byId[id][layout];
+      assert.ok(
+        r.x >= outer.x && r.y >= outer.y &&
+          r.x + r.w <= outer.x + outer.w && r.y + r.h <= outer.y + outer.h,
+        `${id} sticks out of the review box on ${layout}`,
+      );
+    }
+    for (const id of ["album", "photos"]) {
+      const r = byId[id][layout];
+      assert.ok(r.y >= outer.y + outer.h, `${id} should sit below the review box on ${layout}`);
+    }
+  }
 });
