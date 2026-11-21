@@ -95,3 +95,18 @@ test("no two boxes overlap (except boxes inside their group)", () => {
     }
   }
 });
+
+test("the website sits inside a Vercel frame on both layouts", () => {
+  const byId = Object.fromEntries(NODES.map((n) => [n.id, n]));
+  const frame = byId.vercel;
+  assert.ok(frame, "missing vercel frame");
+  assert.equal(frame.kind, "group");
+  for (const layout of ["desktop", "mobile"] as const) {
+    const o = frame[layout];
+    const r = byId.website[layout];
+    assert.ok(
+      r.x >= o.x && r.y >= o.y && r.x + r.w <= o.x + o.w && r.y + r.h <= o.y + o.h,
+      `website sticks out of the vercel frame on ${layout}`,
+    );
+  }
+});

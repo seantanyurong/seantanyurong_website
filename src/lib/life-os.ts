@@ -6,7 +6,7 @@
 */
 
 export const DESKTOP = { width: 1000, height: 730 };
-export const MOBILE = { width: 400, height: 1560 };
+export const MOBILE = { width: 400, height: 1590 };
 
 type Rect = { x: number; y: number; w: number; h: number };
 
@@ -135,14 +135,24 @@ export const NODES: LifeOsNode[] = [
     mobile: { x: 50, y: 1050, w: 300, h: 70 },
   },
   {
+    id: "vercel",
+    kind: "group",
+    label: "Vercel",
+    labelAt: "bottom",
+    description:
+      "Where this site is hosted. It rebuilds from Notion once a day, so new trips and sidequests show up on their own.",
+    desktop: { x: 740, y: 300, w: 240, h: 135 },
+    mobile: { x: 50, y: 1140, w: 300, h: 115 },
+  },
+  {
     id: "website",
     kind: "box",
     label: "seantanyurong.com",
     sub: "this site",
     description:
       "You're looking at it. The Places map and Sidequests read straight from the same database, refreshed daily.",
-    desktop: { x: 740, y: 320, w: 240, h: 80 },
-    mobile: { x: 50, y: 1140, w: 300, h: 70 },
+    desktop: { x: 760, y: 320, w: 200, h: 80 },
+    mobile: { x: 70, y: 1160, w: 260, h: 60 },
   },
   {
     id: "reviews",
@@ -151,7 +161,7 @@ export const NODES: LifeOsNode[] = [
     description:
       "How I close the loop. Every week, quarter and year I step back, look at what the database says I actually did, and decide what's next.",
     desktop: { x: 20, y: 495, w: 960, h: 135 },
-    mobile: { x: 10, y: 1245, w: 380, h: 205 },
+    mobile: { x: 10, y: 1275, w: 380, h: 205 },
   },
   {
     id: "weekly",
@@ -161,7 +171,7 @@ export const NODES: LifeOsNode[] = [
     description:
       "Every Saturday a review page is already waiting, with my hours per project tallied from the time tracker. I fill in wins, goal progress and a reflection.",
     desktop: { x: 40, y: 540, w: 240, h: 70 },
-    mobile: { x: 25, y: 1285, w: 165, h: 64 },
+    mobile: { x: 25, y: 1315, w: 165, h: 64 },
   },
   {
     id: "quarterly",
@@ -171,7 +181,7 @@ export const NODES: LifeOsNode[] = [
     description:
       "Every 12 weeks: did I finish the side quest? What worked, what changes next quarter?",
     desktop: { x: 380, y: 540, w: 240, h: 70 },
-    mobile: { x: 210, y: 1285, w: 165, h: 64 },
+    mobile: { x: 210, y: 1315, w: 165, h: 64 },
   },
   {
     id: "yearly",
@@ -181,7 +191,7 @@ export const NODES: LifeOsNode[] = [
     description:
       "The one-year and life goals that every quarter rolls up to.",
     desktop: { x: 720, y: 540, w: 240, h: 70 },
-    mobile: { x: 210, y: 1370, w: 165, h: 64 },
+    mobile: { x: 210, y: 1400, w: 165, h: 64 },
   },
   {
     id: "album",
@@ -191,7 +201,7 @@ export const NODES: LifeOsNode[] = [
     description:
       "The one offline part. Each quarter I pick the best photos from Google Photos and print them into a physical album — so the year is something I can hold, not just rows in a database.",
     desktop: { x: 400, y: 650, w: 200, h: 60 },
-    mobile: { x: 20, y: 1475, w: 170, h: 64 },
+    mobile: { x: 20, y: 1505, w: 170, h: 64 },
   },
   {
     id: "photos",
@@ -201,7 +211,7 @@ export const NODES: LifeOsNode[] = [
     description:
       "Where every photo I take ends up. At each quarterly review I go through the quarter here and pick the ones worth printing.",
     desktop: { x: 150, y: 650, w: 200, h: 60 },
-    mobile: { x: 215, y: 1475, w: 170, h: 64 },
+    mobile: { x: 215, y: 1505, w: 170, h: 64 },
   },
 ];
 
@@ -212,10 +222,10 @@ export const EDGES: LifeOsEdge[] = [
   { from: "server", to: "notion", desktop: "M365 320 L450 320", mobile: "M120 420 L120 522" },
   { from: "notion", to: "sheet", desktop: "M670 120 L740 120", mobile: "M60 900 L30 900 L30 995 L50 995" },
   { from: "notion", to: "dashboard", desktop: "M670 240 L740 240", mobile: "M60 900 L30 900 L30 1085 L50 1085" },
-  { from: "notion", to: "website", desktop: "M670 360 L740 360", mobile: "M60 900 L30 900 L30 1175 L50 1175" },
-  { from: "notion", to: "reviews", desktop: "M560 460 L560 495", mobile: "M340 900 L372 900 L372 1245" },
-  { from: "weekly", to: "quarterly", desktop: "M280 575 L380 575", mobile: "M190 1317 L210 1317" },
-  { from: "quarterly", to: "yearly", desktop: "M620 575 L720 575", mobile: "M292 1349 L292 1370" },
-  { from: "quarterly", to: "album", dashed: true, desktop: "M500 610 L500 650", mobile: "M230 1349 L230 1359 L105 1359 L105 1475" },
-  { from: "photos", to: "album", dashed: true, desktop: "M350 680 L400 680", mobile: "M215 1507 L190 1507" },
+  { from: "notion", to: "website", desktop: "M670 360 L760 360", mobile: "M60 900 L30 900 L30 1190 L70 1190" },
+  { from: "notion", to: "reviews", desktop: "M560 460 L560 495", mobile: "M340 900 L372 900 L372 1275" },
+  { from: "weekly", to: "quarterly", desktop: "M280 575 L380 575", mobile: "M190 1347 L210 1347" },
+  { from: "quarterly", to: "yearly", desktop: "M620 575 L720 575", mobile: "M292 1379 L292 1400" },
+  { from: "quarterly", to: "album", dashed: true, desktop: "M500 610 L500 650", mobile: "M230 1379 L230 1389 L105 1389 L105 1505" },
+  { from: "photos", to: "album", dashed: true, desktop: "M350 680 L400 680", mobile: "M215 1537 L190 1537" },
 ];
