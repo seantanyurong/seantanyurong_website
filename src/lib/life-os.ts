@@ -56,7 +56,7 @@ export const NODES: LifeOsNode[] = [
     id: "hermes",
     kind: "box",
     label: "hermes",
-    sub: "personal AI agent · Telegram",
+    sub: "personal AI agent",
     description:
       "My personal assistant. I text it on Telegram like I would a person — it logs my expenses, keeps my budget up to date and reads or writes anything else in Notion for me.",
     desktop: { x: 45, y: 135, w: 320, h: 80 },
