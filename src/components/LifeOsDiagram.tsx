@@ -112,16 +112,22 @@ function Node({
         strokeDasharray={isAnalog ? "5 4" : undefined}
       />
       {isPill ? (
-        <text x={x + w / 2} y={y + h / 2 + 5} textAnchor="middle" className="fill-neutral-700 font-sans" fontSize={13 * fs}>
-          {node.label}
-          {node.sub && <tspan className="fill-neutral-400"> · {node.sub}</tspan>}
-        </text>
+        <>
+          <text x={x + w / 2} y={y + h / 2 - 2} textAnchor="middle" className="fill-neutral-900 font-sans" fontSize={13 * fs}>
+            {node.label}
+          </text>
+          {node.sub && (
+            <text x={x + w / 2} y={y + h / 2 + 15 * fs} textAnchor="middle" className="fill-neutral-500 font-sans" fontSize={11 * fs}>
+              {node.sub}
+            </text>
+          )}
+        </>
       ) : (
         <>
           <text
             x={x + 16} y={y + 28}
-            className={isAnalog ? "fill-amber-900 font-serif italic" : "fill-neutral-900 font-mono"}
-            fontSize={(isAnalog ? 19 : 14) * fs}
+            className={isAnalog ? "fill-amber-900 font-serif italic" : "fill-neutral-900 font-sans"}
+            fontSize={(isAnalog ? 19 : 15) * fs}
           >
             {node.label}
           </text>
@@ -208,8 +214,9 @@ export function LifeOsDiagram() {
       <div aria-live="polite" className="mt-6 min-h-[5.5rem] rounded-lg border border-neutral-100 bg-neutral-50 px-4 py-3">
         {node ? (
           <>
-            <p className={`text-sm ${node.kind === "analog" ? "font-serif italic text-amber-900" : "font-mono text-neutral-900"}`}>
+            <p className={`text-sm ${node.kind === "analog" ? "font-serif italic text-amber-900" : "font-medium text-neutral-900"}`}>
               {node.label}
+              {node.sub && <span className="font-normal text-neutral-400"> · {node.sub}</span>}
             </p>
             <p className="mt-1 text-sm leading-relaxed text-neutral-600">{node.description}</p>
           </>

@@ -32,53 +32,54 @@ export type LifeOsEdge = {
 };
 
 export const INTRO =
-  "My life runs on a small, slightly over-engineered system. Notion is the database. A droplet running my personal assistant and my own cron server writes to it, and a weekly → quarterly → yearly review loop reads from it.";
+  "My life runs on a small, slightly over-engineered system. Notion is the database. A personal AI agent and an automation server, both on a DigitalOcean droplet, write to it — and a weekly → quarterly → yearly review system reads from it.";
 
 export const NODES: LifeOsNode[] = [
   {
     id: "telegram",
     kind: "pill",
-    label: "Telegram",
-    sub: "me",
+    label: "Chat",
+    sub: "Telegram",
     description:
-      "Where I talk to my agent. A quick “spent 18 on lunch” is all it takes to log an expense.",
-    desktop: { x: 40, y: 20, w: 160, h: 40 },
-    mobile: { x: 20, y: 10, w: 170, h: 40 },
+      "How I talk to my AI agent. I message it like I'd message a person — “spent 18 on lunch” or “what's on Thursday?”.",
+    desktop: { x: 40, y: 15, w: 160, h: 55 },
+    mobile: { x: 20, y: 5, w: 170, h: 60 },
   },
   {
     id: "calendar",
     kind: "pill",
-    label: "Google Calendar",
+    label: "Calendar",
+    sub: "Google Calendar",
     description:
-      "My schedule. Hermes can read and add events, so “what's on Thursday?” or “book dinner Friday 7pm” works straight from Telegram.",
-    desktop: { x: 220, y: 20, w: 170, h: 40 },
-    mobile: { x: 210, y: 10, w: 170, h: 40 },
+      "My schedule. My AI agent reads and adds events whenever I ask it to.",
+    desktop: { x: 220, y: 15, w: 170, h: 55 },
+    mobile: { x: 210, y: 5, w: 170, h: 60 },
   },
   {
     id: "droplet",
     kind: "group",
-    label: "DigitalOcean droplet",
+    label: "DigitalOcean",
     labelAt: "bottom",
     description:
-      "A small always-on server. It hosts the two things that write to my database for me.",
+      "An always-on server that runs my AI agent and automation server, so they keep working while I sleep.",
     desktop: { x: 20, y: 90, w: 370, h: 345 },
     mobile: { x: 10, y: 80, w: 380, h: 380 },
   },
   {
     id: "hermes",
     kind: "box",
-    label: "hermes",
-    sub: "personal AI agent",
+    label: "Personal AI agent",
+    sub: "Hermes",
     description:
-      "My personal assistant. I text it on Telegram like I would a person — it logs my expenses, keeps my budget up to date, manages my calendar and reads or writes anything else in Notion for me.",
+      "Reads my Telegram messages and acts on them: logs expenses, keeps my budget up to date, manages my calendar, and reads or writes anything else in Notion.",
     desktop: { x: 45, y: 135, w: 320, h: 80 },
     mobile: { x: 30, y: 125, w: 315, h: 80 },
   },
   {
     id: "server",
     kind: "box",
-    label: "seantanyurong_server",
-    sub: "node server",
+    label: "Automation server",
+    sub: "Node.js",
     lines: [
       "weekdays → time trackers",
       "saturdays → weekly review page",
@@ -86,15 +87,15 @@ export const NODES: LifeOsNode[] = [
       "1st → sync finances sheet",
     ],
     description:
-      "My own Node server running cron jobs: it creates each weekday's time-tracker pages, sets up Saturday's weekly review, books recurring expenses on the 1st, then syncs the month into my finances sheet.",
+      "Runs scheduled jobs against my database: creates time-tracker pages every weekday, sets up the weekly review every Saturday, and on the 1st books recurring expenses and syncs the month into my finances.",
     desktop: { x: 45, y: 240, w: 320, h: 160 },
     mobile: { x: 30, y: 230, w: 315, h: 190 },
   },
   {
     id: "notion",
     kind: "db",
-    label: "Notion",
-    sub: "the database",
+    label: "Database",
+    sub: "Notion",
     lines: [
       "expenses",
       "subscriptions",
@@ -110,27 +111,27 @@ export const NODES: LifeOsNode[] = [
       "trip_stops",
     ],
     description:
-      "The database. Every part of my life is a table here — money, time, goals, trips. Everything else in the system reads from it or writes to it.",
+      "Holds every part of my life as a table — money, time, goals and trips. Everything else in the system reads from it or writes to it.",
     desktop: { x: 450, y: 60, w: 220, h: 400 },
     mobile: { x: 60, y: 520, w: 280, h: 400 },
   },
   {
     id: "sheet",
     kind: "box",
-    label: "My Finances",
+    label: "Finances",
     sub: "Google Sheets",
     description:
-      "My long-term financial planner. On the 1st of every month the server totals last month's expenses by category and writes them into the sheet.",
+      "Tracks my long-term finances. On the 1st of every month it receives last month's expenses, totalled by category.",
     desktop: { x: 740, y: 80, w: 240, h: 80 },
     mobile: { x: 50, y: 960, w: 300, h: 70 },
   },
   {
     id: "dashboard",
     kind: "box",
-    label: "Todo Dashboard",
-    sub: "Notion page",
+    label: "Todo dashboard",
+    sub: "Notion",
     description:
-      "My daily driver. One Notion page that pulls together today's and tomorrow's actions, active projects, side quests, the time tracker and my calendar.",
+      "Shows my day at a glance: today's and tomorrow's actions, active projects, side quests, the time tracker and my calendar.",
     desktop: { x: 740, y: 200, w: 240, h: 80 },
     mobile: { x: 50, y: 1050, w: 300, h: 70 },
   },
@@ -140,17 +141,17 @@ export const NODES: LifeOsNode[] = [
     label: "Vercel",
     labelAt: "bottom",
     description:
-      "Where this site is hosted. It rebuilds from Notion once a day, so new trips and sidequests show up on their own.",
+      "Hosts this website. It rebuilds from my database once a day.",
     desktop: { x: 740, y: 300, w: 240, h: 135 },
     mobile: { x: 50, y: 1140, w: 300, h: 115 },
   },
   {
     id: "website",
     kind: "box",
-    label: "seantanyurong.com",
-    sub: "this site",
+    label: "Personal website",
+    sub: "Next.js",
     description:
-      "You're looking at it. The Places map and Sidequests read straight from the same database, refreshed daily.",
+      "This site, seantanyurong.com. The Places map and Sidequests are read from my database, so updating my life updates the site.",
     desktop: { x: 760, y: 320, w: 200, h: 80 },
     mobile: { x: 70, y: 1160, w: 260, h: 60 },
   },
@@ -159,7 +160,7 @@ export const NODES: LifeOsNode[] = [
     kind: "group",
     label: "Review system",
     description:
-      "How I close the loop. Every week, quarter and year I step back, look at what the database says I actually did, and decide what's next.",
+      "Closes the loop. Every week, quarter and year I look at what the database says I actually did, and decide what's next.",
     desktop: { x: 20, y: 495, w: 960, h: 135 },
     mobile: { x: 10, y: 1275, w: 380, h: 205 },
   },
@@ -167,9 +168,9 @@ export const NODES: LifeOsNode[] = [
     id: "weekly",
     kind: "box",
     label: "Weekly review",
-    sub: "every Saturday",
+    sub: "Notion",
     description:
-      "Every Saturday a review page is already waiting, with my hours per project tallied from the time tracker. I fill in wins, goal progress and a reflection.",
+      "Every Saturday a review page is waiting with my hours already tallied. I fill in wins, goal progress and a reflection.",
     desktop: { x: 40, y: 540, w: 240, h: 70 },
     mobile: { x: 25, y: 1315, w: 165, h: 64 },
   },
@@ -177,9 +178,9 @@ export const NODES: LifeOsNode[] = [
     id: "quarterly",
     kind: "box",
     label: "Quarterly review",
-    sub: "every 12 weeks",
+    sub: "Notion",
     description:
-      "Every 12 weeks: did I finish the side quest? What worked, what changes next quarter?",
+      "Every 12 weeks I check whether I finished my side quest, what worked, and what changes next quarter.",
     desktop: { x: 380, y: 540, w: 240, h: 70 },
     mobile: { x: 210, y: 1315, w: 165, h: 64 },
   },
@@ -187,9 +188,9 @@ export const NODES: LifeOsNode[] = [
     id: "yearly",
     kind: "box",
     label: "Yearly & life goals",
-    sub: "where it all rolls up",
+    sub: "Notion",
     description:
-      "The one-year and life goals that every quarter rolls up to.",
+      "Once a year I review and reset the goals every quarter rolls up to, measured against my life goals.",
     desktop: { x: 720, y: 540, w: 240, h: 70 },
     mobile: { x: 210, y: 1400, w: 165, h: 64 },
   },
@@ -197,27 +198,27 @@ export const NODES: LifeOsNode[] = [
     id: "album",
     kind: "analog",
     label: "Photo album",
-    sub: "analog · by hand",
+    sub: "Printed",
     description:
-      "The one offline part. Each quarter I pick the best photos from Google Photos and print them into a physical album — so the year is something I can hold, not just rows in a database.",
+      "The one offline part. Every quarter I print the best photos into a physical album, so the year is something I can hold.",
     desktop: { x: 400, y: 650, w: 200, h: 60 },
     mobile: { x: 20, y: 1505, w: 170, h: 64 },
   },
   {
     id: "photos",
     kind: "box",
-    label: "Google Photos",
-    sub: "where photos live",
+    label: "Photo storage",
+    sub: "Google Photos",
     description:
-      "Where every photo I take ends up. At each quarterly review I go through the quarter here and pick the ones worth printing.",
+      "Stores every photo I take. At each quarterly review I pick the ones worth printing.",
     desktop: { x: 150, y: 650, w: 200, h: 60 },
     mobile: { x: 215, y: 1505, w: 170, h: 64 },
   },
 ];
 
 export const EDGES: LifeOsEdge[] = [
-  { from: "calendar", to: "hermes", twoWay: true, desktop: "M305 60 L305 135", mobile: "M295 50 L295 125" },
-  { from: "telegram", to: "hermes", desktop: "M120 60 L120 135", mobile: "M105 50 L105 125" },
+  { from: "calendar", to: "hermes", twoWay: true, desktop: "M305 70 L305 135", mobile: "M295 65 L295 125" },
+  { from: "telegram", to: "hermes", desktop: "M120 70 L120 135", mobile: "M105 65 L105 125" },
   { from: "hermes", to: "notion", desktop: "M365 175 L450 175", mobile: "M345 165 L375 165 L375 500 L300 500 L300 522" },
   { from: "server", to: "notion", desktop: "M365 320 L450 320", mobile: "M120 420 L120 522" },
   { from: "notion", to: "sheet", desktop: "M670 120 L740 120", mobile: "M60 900 L30 900 L30 995 L50 995" },
