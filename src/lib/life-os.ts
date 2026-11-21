@@ -81,13 +81,12 @@ export const NODES: LifeOsNode[] = [
     label: "Automation server",
     sub: "Node.js",
     lines: [
-      "weekdays → time trackers",
       "saturdays → weekly review page",
       "1st → subs, insurance, allowances, tax",
       "1st → sync finances sheet",
     ],
     description:
-      "Runs scheduled jobs against my database: creates time-tracker pages every weekday, sets up the weekly review every Saturday, and on the 1st books recurring expenses and syncs the month into my finances.",
+      "Runs scheduled jobs against my database: sets up the weekly review every Saturday, and on the 1st books recurring expenses and syncs the month into my finances.",
     desktop: { x: 45, y: 240, w: 320, h: 160 },
     mobile: { x: 30, y: 230, w: 315, h: 190 },
   },
@@ -102,7 +101,6 @@ export const NODES: LifeOsNode[] = [
       "insurance",
       "allowances",
       "taxes",
-      "time_tracker",
       "actions",
       "weekly_reviews",
       "quarterly_reviews",
@@ -132,7 +130,7 @@ export const NODES: LifeOsNode[] = [
     label: "Todo dashboard",
     sub: "Notion",
     description:
-      "Shows my day at a glance: today's and tomorrow's actions, active projects, side quests, the time tracker and my calendar.",
+      "Shows my day at a glance: today's and tomorrow's actions, active projects, side quests and my calendar.",
     desktop: { x: 740, y: 200, w: 240, h: 80 },
     mobile: { x: 50, y: 1050, w: 300, h: 70 },
   },
@@ -171,7 +169,7 @@ export const NODES: LifeOsNode[] = [
     label: "Weekly review",
     sub: "Notion",
     description:
-      "Every Saturday a review page is waiting with my hours already tallied. I fill in wins, goal progress and a reflection.",
+      "Every Saturday a fresh review page is waiting for me. I fill in wins, goal progress and a reflection.",
     desktop: { x: 40, y: 540, w: 240, h: 70 },
     mobile: { x: 25, y: 1315, w: 165, h: 64 },
   },

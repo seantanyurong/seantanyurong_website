@@ -117,3 +117,7 @@ test("the database lists the tables the review system uses", () => {
     assert.ok(tables.includes(t), `missing table ${t}`);
   }
 });
+
+test("the time tracker is not part of the system", () => {
+  assert.doesNotMatch(JSON.stringify({ NODES, INTRO }), /time.?tracker|hours/i);
+});
