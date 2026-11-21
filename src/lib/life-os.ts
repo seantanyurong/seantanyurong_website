@@ -6,7 +6,7 @@
 */
 
 export const DESKTOP = { width: 1000, height: 730 };
-export const MOBILE = { width: 400, height: 1290 };
+export const MOBILE = { width: 400, height: 1390 };
 
 type Rect = { x: number; y: number; w: number; h: number };
 
@@ -168,9 +168,19 @@ export const NODES: LifeOsNode[] = [
     label: "Photo album",
     sub: "analog · by hand",
     description:
-      "The one offline part. Each quarter I print that quarter's photos into a physical album — so the year is something I can hold, not just rows in a database.",
+      "The one offline part. Each quarter I pick the best photos from Google Photos and print them into a physical album — so the year is something I can hold, not just rows in a database.",
     desktop: { x: 400, y: 650, w: 200, h: 60 },
     mobile: { x: 20, y: 1210, w: 170, h: 64 },
+  },
+  {
+    id: "photos",
+    kind: "box",
+    label: "Google Photos",
+    sub: "where photos live",
+    description:
+      "Where every photo I take ends up. At each quarterly review I go through the quarter here and pick the ones worth printing.",
+    desktop: { x: 150, y: 650, w: 200, h: 60 },
+    mobile: { x: 20, y: 1310, w: 170, h: 64 },
   },
 ];
 
@@ -185,6 +195,7 @@ export const EDGES: LifeOsEdge[] = [
   { from: "weekly", to: "quarterly", desktop: "M280 575 L380 575", mobile: "M190 1142 L210 1142" },
   { from: "quarterly", to: "yearly", desktop: "M620 575 L720 575", mobile: "M295 1174 L295 1210" },
   { from: "quarterly", to: "album", dashed: true, desktop: "M500 610 L500 650", mobile: "M240 1174 L140 1210" },
+  { from: "photos", to: "album", dashed: true, desktop: "M350 680 L400 680", mobile: "M105 1310 L105 1274" },
 ];
 
 export const LOOPS = [
@@ -194,7 +205,7 @@ export const LOOPS = [
   },
   {
     title: "The review loop",
-    body: "Daily time tracking feeds a weekly review that's ready before I am. Weeks roll into 12-week quarters, quarters into yearly goals — and each quarter ends with printing photos for the album.",
+    body: "Daily time tracking feeds a weekly review that's ready before I am. Weeks roll into 12-week quarters, quarters into yearly goals — and each quarter ends with picking photos from Google Photos and printing them for the album.",
   },
   {
     title: "This site is part of it",

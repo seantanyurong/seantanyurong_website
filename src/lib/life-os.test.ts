@@ -30,13 +30,14 @@ test("every edge has a path for both layouts", () => {
 test("covers the parts Sean asked for", () => {
   for (const id of [
     "droplet", "hermes", "server", "telegram", "notion", "sheet",
-    "website", "weekly", "quarterly", "yearly", "album",
+    "website", "weekly", "quarterly", "yearly", "album", "photos",
   ]) {
     assert.ok(ids.has(id), `missing ${id}`);
   }
   assert.ok(EDGES.some((e) => e.from === "weekly" && e.to === "quarterly"));
   assert.ok(EDGES.some((e) => e.from === "quarterly" && e.to === "yearly"));
   assert.ok(EDGES.some((e) => e.from === "quarterly" && e.to === "album" && e.dashed));
+  assert.ok(EDGES.some((e) => e.from === "photos" && e.to === "album" && e.dashed));
 });
 
 test("copy never leaks ids, money amounts or private pages", () => {
