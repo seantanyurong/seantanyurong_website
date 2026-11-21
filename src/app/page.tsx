@@ -5,10 +5,11 @@ import { ProjectsGrid } from "@/components/ProjectsGrid";
 import { Sidequests } from "@/components/Sidequests";
 import { Footer } from "@/components/Footer";
 import { PlacesMap } from "@/components/PlacesMap";
-import { getProjects, getSidequests } from "@/lib/content";
+import { getProjects } from "@/lib/content";
 import { getPlacePins } from "@/lib/places";
+import { getSidequests } from "@/lib/sidequests";
 
-// Re-fetch trips from Notion at most once a day.
+// Re-fetch trips and sidequests from Notion at most once a day.
 export const revalidate = 86400;
 
 export default async function HomePage() {
@@ -54,23 +55,25 @@ export default async function HomePage() {
           </details>
         </section>
 
-        <section id="sidequests" className="scroll-mt-24 pb-20">
-          <details
-            open
-            className="group/section [&_summary::-webkit-details-marker]:hidden"
-          >
-            <summary className="mb-8 cursor-pointer list-none rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-blue-300">
-              <SectionHeading
-                eyebrow="On the list"
-                title="Sidequests"
-                accent="purple"
-                count={sidequests.length}
-                collapsible
-              />
-            </summary>
-            <Sidequests items={sidequests} />
-          </details>
-        </section>
+        {sidequests.length > 0 && (
+          <section id="sidequests" className="scroll-mt-24 pb-20">
+            <details
+              open
+              className="group/section [&_summary::-webkit-details-marker]:hidden"
+            >
+              <summary className="mb-8 cursor-pointer list-none rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-blue-300">
+                <SectionHeading
+                  eyebrow="On the list"
+                  title="Sidequests"
+                  accent="purple"
+                  count={sidequests.length}
+                  collapsible
+                />
+              </summary>
+              <Sidequests items={sidequests} />
+            </details>
+          </section>
+        )}
 
         {pins.length > 0 && (
           <section id="places" className="scroll-mt-24 pb-20">
