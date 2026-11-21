@@ -66,7 +66,7 @@ export const NODES: LifeOsNode[] = [
     id: "server",
     kind: "box",
     label: "seantanyurong_server",
-    sub: "node-cron",
+    sub: "node server",
     lines: [
       "weekdays → time trackers",
       "saturdays → weekly review page",
