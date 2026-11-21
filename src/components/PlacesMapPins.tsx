@@ -18,7 +18,7 @@ import {
   overlap (e.g. on a phone most of SE Asia becomes one dot).
 */
 
-export type MapPoint = Pick<Pin, "key" | "visits"> & {
+export type MapPoint = Pick<Pin, "key" | "label" | "visits"> & {
   x: number; // SVG units
   y: number;
 };
@@ -42,8 +42,7 @@ function visitLine(heading: string, v: Pin["visits"][number]) {
 function describe(cluster: MapCluster) {
   return cluster.pins
     .map((p) => {
-      const heading = p.visits[0].trip;
-      return `${heading}: ${p.visits.map((v) => visitLine(heading, v)).join(", ")}`;
+      return `${p.label}: ${p.visits.map((v) => visitLine(p.label, v)).join(", ")}`;
     })
     .join("; ");
 }
@@ -155,22 +154,19 @@ export function PlacesMapPins({
                 className={`pointer-events-none absolute w-max max-w-[16rem] rounded-lg border border-neutral-200 bg-white/95 px-3 py-2 text-left shadow-sm backdrop-blur-md ${horizontal} ${vertical}`}
               >
                 <ul className="space-y-1.5">
-                  {cluster.pins.map((p) => {
-                    const heading = p.visits[0].trip;
-                    return (
-                      <li key={p.key}>
-                        <p className="text-sm text-neutral-900">{heading}</p>
-                        {p.visits.map((v) => (
-                          <p
-                            key={v.departure + v.trip}
-                            className="font-mono text-[11px] text-neutral-500"
-                          >
-                            {visitLine(heading, v)}
-                          </p>
-                        ))}
-                      </li>
-                    );
-                  })}
+                  {cluster.pins.map((p) => (
+                    <li key={p.key}>
+                      <p className="text-sm text-neutral-900">{p.label}</p>
+                      {p.visits.map((v) => (
+                        <p
+                          key={v.departure + v.trip}
+                          className="font-mono text-[11px] text-neutral-500"
+                        >
+                          {visitLine(p.label, v)}
+                        </p>
+                      ))}
+                    </li>
+                  ))}
                 </ul>
               </div>
             )}

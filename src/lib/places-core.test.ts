@@ -174,3 +174,67 @@ test("clusterRadiusFor converts a CSS-pixel hit area to SVG units", () => {
   assert.equal(clusterRadiusFor(960), 24);
   assert.equal(clusterRadiusFor(320), 72);
 });
+
+function withId<T extends object>(id: string, p: T) {
+  return { id, ...p };
+}
+function stop(trip: string, location: { lat: number; lng: number; name: string } | null) {
+  return {
+    object: "page",
+    properties: {
+      City: { type: "title", title: [{ plain_text: location?.name ?? "?" }] },
+      Location: {
+        type: "place",
+        place: location ? { lat: location.lat, lon: location.lng, name: location.name } : null,
+      },
+      Trip: { type: "relation", relation: [{ id: trip }] },
+    },
+  };
+}
+const hanoi = { lat: 21.02776, lng: 105.83416, name: "Hanoi, Vietnam" };
+const sapa = { lat: 22.3364, lng: 103.8438, name: "Sa Pa, Lào Cai, Vietnam" };
+
+test("stops add a pin per extra city, carrying the trip's name and date", () => {
+  const pins = parsePins(
+    [withId("trip-1", page("Hanoi & Sapa", "2025-08-22", hanoi, "Couple"))],
+    TODAY,
+    [stop("trip-1", sapa)],
+  );
+  assert.deepEqual(pins.map((p) => p.label).sort(), ["Hanoi", "Sa Pa"]);
+  const sapaPin = pins.find((p) => p.label === "Sa Pa")!;
+  assert.deepEqual(sapaPin.visits, [
+    { trip: "Hanoi & Sapa", departure: "2025-08-22", tripType: "Couple" },
+  ]);
+});
+
+test("stops of hidden trips, unknown trips, or without location are skipped", () => {
+  const pins = parsePins(
+    [
+      withId("future", page("Later", "2027-01-01", hanoi)),
+      withId("undated", page("Someday", null, hanoi)),
+    ],
+    TODAY,
+    [stop("future", sapa), stop("undated", sapa), stop("missing", sapa), stop("future", null)],
+  );
+  assert.deepEqual(pins, []);
+});
+
+test("a stop at the trip's own location does not double the visit", () => {
+  const pins = parsePins(
+    [withId("trip-1", page("Hanoi & Sapa", "2025-08-22", hanoi))],
+    TODAY,
+    [stop("trip-1", hanoi)],
+  );
+  assert.equal(pins.length, 1);
+  assert.equal(pins[0].visits.length, 1);
+});
+
+test("a stop works even when its trip has no Location of its own", () => {
+  const pins = parsePins(
+    [withId("trip-1", page("US road trip", "2025-03-01", null))],
+    TODAY,
+    [stop("trip-1", sapa)],
+  );
+  assert.equal(pins.length, 1);
+  assert.equal(pins[0].visits[0].trip, "US road trip");
+});

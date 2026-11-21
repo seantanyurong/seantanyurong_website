@@ -42,3 +42,16 @@ coordinates. Fallback: add `Lat`/`Lng` number columns and copy values.
 
 ## Left to the builder
 Exact projection framing/crop, dot sizes, tooltip styling, accent colour.
+
+## Addendum (2026-11-21): multi-city trips and countries
+- Pins are cities. A trip's own `Location` is always pinned; extra cities live
+  in a new Notion database **Trip Stops** (`City` title, `Location` place,
+  `Trip` two-way relation → Travel DB, synced as `Stops` on the trip).
+  Data source `41f646e6-5266-812a-b232-000b3d01cfb6`, env `NOTION_STOPS_DB_ID`.
+- A stop inherits its trip's name, departure date and type, and the trip's
+  filters (no departure / future → hidden). Same trip twice at one place counts once.
+- Visited countries are shaded on the map (point-in-polygon on world-atlas,
+  nudging coastal points that fall just outside the simplified outlines), and a
+  caption reads "N cities across M countries".
+- Approaches considered: Stops table (chosen); one Travel DB row per city
+  (splits trip pages); free-text "also visited" column (needs geocoding).

@@ -20,63 +20,97 @@ export type Pin = {
   visits: Visit[];
 };
 
-type Row = Visit & { lat: number; lng: number; locationName: string };
+type Place = { lat: number; lng: number; name: string | null };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function parseRow(page: any): Row | null {
-  const props = page?.properties;
-  const place = props?.Location?.place;
-  const departure: unknown = props?.["Departure Date"]?.date?.start;
-  if (
-    typeof place?.lat !== "number" ||
-    typeof place?.lon !== "number" ||
-    typeof departure !== "string"
-  ) {
+function parsePlace(prop: any): Place | null {
+  const place = prop?.place;
+  if (typeof place?.lat !== "number" || typeof place?.lon !== "number") {
     return null;
   }
+  return {
+    lat: place.lat,
+    lng: place.lon,
+    name: typeof place.name === "string" && place.name ? place.name : null,
+  };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function parseTrip(page: any): (Visit & { place: Place | null }) | null {
+  const props = page?.properties;
+  const departure: unknown = props?.["Departure Date"]?.date?.start;
+  if (typeof departure !== "string") return null;
 
   const titleParts: { plain_text?: string }[] = props?.Place?.title ?? [];
   const trip = titleParts.map((t) => t.plain_text ?? "").join("").trim();
   const tripType: unknown = props?.["Trip Type"]?.select?.name;
-  const locationName =
-    typeof place.name === "string" && place.name ? place.name : trip;
+  const place = parsePlace(props?.Location);
 
   return {
-    trip: trip || locationName,
+    trip: trip || place?.name || "Trip",
     departure: departure.slice(0, 10),
     tripType: typeof tripType === "string" ? tripType : null,
-    lat: place.lat,
-    lng: place.lon,
-    locationName,
+    place,
   };
 }
 
-export function parsePins(pages: unknown[], today: string): Pin[] {
+/*
+  `pages` are Travel DB rows (one per trip). `stops` are optional Trip Stops
+  rows: extra cities on a trip, linked through their `Trip` relation. A stop
+  inherits its trip's name, date and type, and is hidden when its trip is.
+*/
+export function parsePins(
+  pages: unknown[],
+  today: string,
+  stops: unknown[] = [],
+): Pin[] {
   const pins = new Map<string, Pin>();
+  // Pin key → trip ids already counted there, so a stop at the trip's own
+  // Location doesn't add the same visit twice.
+  const seen = new Map<string, Set<string>>();
 
-  for (const page of pages) {
-    const row = parseRow(page);
-    if (!row || row.departure > today) continue;
-
+  const addVisit = (tripId: string, place: Place, visit: Visit) => {
     // Round so the same place entered twice with slightly different
     // coordinates still lands on one pin.
-    const key = `${row.lat.toFixed(2)},${row.lng.toFixed(2)}`;
+    const key = `${place.lat.toFixed(2)},${place.lng.toFixed(2)}`;
     let pin = pins.get(key);
     if (!pin) {
       pin = {
         key,
-        label: row.locationName.split(",")[0].trim(),
-        lat: row.lat,
-        lng: row.lng,
+        label: (place.name ?? visit.trip).split(",")[0].trim(),
+        lat: place.lat,
+        lng: place.lng,
         visits: [],
       };
       pins.set(key, pin);
+      seen.set(key, new Set());
     }
-    pin.visits.push({
-      trip: row.trip,
-      departure: row.departure,
-      tripType: row.tripType,
-    });
+    const tripsHere = seen.get(key)!;
+    if (tripsHere.has(tripId)) return;
+    tripsHere.add(tripId);
+    pin.visits.push(visit);
+  };
+
+  const trips = new Map<string, Visit>();
+  pages.forEach((page, i) => {
+    const parsed = parseTrip(page);
+    if (!parsed || parsed.departure > today) return;
+    const { place, ...visit } = parsed;
+    const id: string = (page as { id?: string })?.id ?? `row-${i}`;
+    trips.set(id, visit);
+    if (place) addVisit(id, place, visit);
+  });
+
+  for (const s of stops) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const props = (s as any)?.properties;
+    const place = parsePlace(props?.Location);
+    const relations: { id?: string }[] = props?.Trip?.relation ?? [];
+    if (!place) continue;
+    for (const { id } of relations) {
+      const visit = id ? trips.get(id) : undefined;
+      if (id && visit) addVisit(id, place, visit);
+    }
   }
 
   const byNewest = (a: Visit, b: Visit) => b.departure.localeCompare(a.departure);
