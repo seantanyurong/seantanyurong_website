@@ -5,6 +5,8 @@ import { ProjectsGrid } from "@/components/ProjectsGrid";
 import { Sidequests } from "@/components/Sidequests";
 import { Footer } from "@/components/Footer";
 import { PlacesMap } from "@/components/PlacesMap";
+import { LifeOsDiagram } from "@/components/LifeOsDiagram";
+import { INTRO, LOOPS } from "@/lib/life-os";
 import { getProjects } from "@/lib/content";
 import { getPlacePins } from "@/lib/places";
 import { getSidequests } from "@/lib/sidequests";
@@ -94,6 +96,38 @@ export default async function HomePage() {
             </details>
           </section>
         )}
+
+        <section id="life-os" className="scroll-mt-24 pb-20">
+          <details
+            open
+            className="group/section [&_summary::-webkit-details-marker]:hidden"
+          >
+            <summary className="mb-8 cursor-pointer list-none rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-blue-300">
+              <SectionHeading
+                eyebrow="How I run things"
+                title="Life OS"
+                accent="lime"
+                collapsible
+              />
+            </summary>
+            <p className="mb-8 max-w-prose text-[15px] leading-relaxed text-neutral-700">
+              {INTRO}
+            </p>
+            <LifeOsDiagram />
+            <div className="mt-10 grid gap-8 sm:grid-cols-3">
+              {LOOPS.map((loop) => (
+                <div key={loop.title}>
+                  <h3 className="text-sm font-medium text-neutral-900">
+                    {loop.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-neutral-600">
+                    {loop.body}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </details>
+        </section>
 
         <Footer />
       </main>

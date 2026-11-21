@@ -14,6 +14,7 @@ const items: NavItem[] = [
   { id: "projects", label: "Projects" },
   { id: "sidequests", label: "Sidequests" },
   { id: "places", label: "Places" },
+  { id: "life-os", label: "Life OS" },
 ];
 
 export function Nav() {

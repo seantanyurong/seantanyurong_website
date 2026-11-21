@@ -1,0 +1,49 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { EDGES, INTRO, LOOPS, NODES } from "./life-os.ts";
+
+const ids = new Set(NODES.map((n) => n.id));
+
+test("every edge connects two known nodes", () => {
+  for (const e of EDGES) {
+    assert.ok(ids.has(e.from), `unknown from: ${e.from}`);
+    assert.ok(ids.has(e.to), `unknown to: ${e.to}`);
+  }
+});
+
+test("every node has a description and both layouts", () => {
+  for (const n of NODES) {
+    assert.ok(n.description.length > 20, `${n.id} needs a description`);
+    for (const layout of [n.desktop, n.mobile]) {
+      assert.ok(layout.w > 0 && layout.h > 0, `${n.id} needs a size`);
+    }
+  }
+});
+
+test("every edge has a path for both layouts", () => {
+  for (const e of EDGES) {
+    assert.match(e.desktop, /^M/);
+    assert.match(e.mobile, /^M/);
+  }
+});
+
+test("covers the parts Sean asked for", () => {
+  for (const id of [
+    "droplet", "hermes", "server", "telegram", "notion", "sheet",
+    "website", "weekly", "quarterly", "yearly", "album",
+  ]) {
+    assert.ok(ids.has(id), `missing ${id}`);
+  }
+  assert.ok(EDGES.some((e) => e.from === "weekly" && e.to === "quarterly"));
+  assert.ok(EDGES.some((e) => e.from === "quarterly" && e.to === "yearly"));
+  assert.ok(EDGES.some((e) => e.from === "quarterly" && e.to === "album" && e.dashed));
+});
+
+test("copy never leaks ids, money amounts or private pages", () => {
+  const copy = JSON.stringify({ NODES, EDGES, INTRO, LOOPS });
+  assert.doesNotMatch(copy, /[0-9a-f]{8}-?[0-9a-f]{4}/i, "looks like an id");
+  assert.doesNotMatch(copy, /1PqeQ|FIRE_SHEET|GOOGLE_SA|NOTION_TOKEN/);
+  assert.doesNotMatch(copy, /\$\s?\d{3,}|\d{3,}\.\d{2}/, "looks like a real amount");
+  assert.doesNotMatch(copy, /girlfriend|housing|proposal|milestone/i);
+  assert.doesNotMatch(copy, /\b\d{1,3}(\.\d{1,3}){3}\b/, "looks like an IP address");
+});
