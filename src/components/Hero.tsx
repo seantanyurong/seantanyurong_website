@@ -23,7 +23,7 @@ export function Hero() {
             Constructor
           </a>
           , where I help build AI-powered product search and discovery for
-          ecommerce. Outside of work, I&apos;m CTO of{' '}
+          ecommerce. Outside of work, I&apos;m the cofounder of{' '}
           <a
             href="https://jobless.club"
             target="_blank"

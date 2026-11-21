@@ -17,12 +17,12 @@ const instrumentSerif = Instrument_Serif({
 export const metadata: Metadata = {
   title: 'Sean Tan',
   description:
-    'Sean Tan — Forward deployed engineer at Constructor.io, CTO of Jobless Club. Singaporean indie hacker and side quester.',
+    'Sean Tan — Forward deployed engineer at Constructor.io, cofounder of Jobless Club. Singaporean indie hacker and side quester.',
   metadataBase: new URL('https://seantanyurong.com'),
   openGraph: {
     title: 'Sean Tan',
     description:
-      'Forward deployed engineer at Constructor.io, CTO of Jobless Club. Singaporean indie hacker and side quester.',
+      'Forward deployed engineer at Constructor.io, cofounder of Jobless Club. Singaporean indie hacker and side quester.',
     url: 'https://seantanyurong.com',
     siteName: 'Sean Tan',
     type: 'website',
