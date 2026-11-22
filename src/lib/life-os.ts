@@ -68,7 +68,7 @@ export const NODES: LifeOsNode[] = [
   {
     id: "hermes",
     kind: "box",
-    label: "Personal AI agent",
+    label: "Personal AI Agent",
     sub: "Hermes",
     description:
       "Reads my Telegram messages and acts on them: logs expenses, keeps my budget up to date, manages my calendar, and reads or writes anything else in Notion.",
@@ -78,7 +78,7 @@ export const NODES: LifeOsNode[] = [
   {
     id: "server",
     kind: "box",
-    label: "Automation server",
+    label: "Automation Server",
     sub: "Node.js",
     lines: [
       "saturdays → weekly review page",
@@ -127,7 +127,7 @@ export const NODES: LifeOsNode[] = [
   {
     id: "website",
     kind: "box",
-    label: "Personal website",
+    label: "Personal Website",
     sub: "Next.js",
     description:
       "This site, seantanyurong.com. The Places map and Sidequests are read from my database, so updating my life updates the site.",
@@ -146,7 +146,7 @@ export const NODES: LifeOsNode[] = [
   {
     id: "daily",
     kind: "box",
-    label: "Daily todos",
+    label: "Daily Todos",
     sub: "Notion dashboard",
     description:
       "Every morning I open one Notion page with today's and tomorrow's actions, active projects, side quests and my calendar, and work from that.",
@@ -156,7 +156,7 @@ export const NODES: LifeOsNode[] = [
   {
     id: "weekly",
     kind: "box",
-    label: "Weekly review",
+    label: "Weekly Review",
     sub: "Notion",
     description:
       "Every Saturday a fresh review page is waiting for me. I fill in wins, goal progress and a reflection.",
@@ -166,7 +166,7 @@ export const NODES: LifeOsNode[] = [
   {
     id: "monthly",
     kind: "box",
-    label: "Monthly finances",
+    label: "Monthly Finances",
     sub: "Google Sheets",
     description:
       "On the 1st, last month's expenses are already booked and synced into my finance sheet, so I just review where the money went and adjust my budget.",
@@ -176,7 +176,7 @@ export const NODES: LifeOsNode[] = [
   {
     id: "quarterly",
     kind: "box",
-    label: "Quarterly review",
+    label: "Quarterly Review",
     sub: "Notion",
     description:
       "Every 12 weeks I check whether I finished my side quest, what worked, and what changes next quarter.",
@@ -186,7 +186,7 @@ export const NODES: LifeOsNode[] = [
   {
     id: "yearly",
     kind: "box",
-    label: "Yearly goals",
+    label: "Yearly Goals",
     sub: "Notion",
     description:
       "Once a year I review and reset the goals every quarter rolls up to, measured against my life goals.",
@@ -196,7 +196,7 @@ export const NODES: LifeOsNode[] = [
   {
     id: "travel",
     kind: "box",
-    label: "Travel planning",
+    label: "Travel Planning",
     sub: "Notion",
     description:
       "Every trip gets a page from my trip template — itinerary, to-dos, budget and research — and once I've been, it shows up on the Places map.",
@@ -206,7 +206,7 @@ export const NODES: LifeOsNode[] = [
   {
     id: "album",
     kind: "analog",
-    label: "Photo album",
+    label: "Photo Album",
     sub: "Printed",
     description:
       "The one offline part. Every quarter I print the best photos into a physical album, so the year is something I can hold.",
@@ -216,7 +216,7 @@ export const NODES: LifeOsNode[] = [
   {
     id: "photos",
     kind: "box",
-    label: "Photo storage",
+    label: "Photo Storage",
     sub: "Google Photos",
     description:
       "Stores every photo I take. At each quarterly review I pick the ones worth printing.",
