@@ -10,16 +10,17 @@ import { GearRow } from "./GearRow";
 
 function Tile({ item }: { item: GearItem }) {
   const square = (
-    <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl border border-neutral-100 bg-neutral-50 transition-colors group-hover:border-neutral-300">
+    <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl border border-neutral-100 bg-white transition-colors group-hover:border-neutral-300">
       {item.image ? (
         // Plain <img>: photos are either hot-linked or already-sized files in
-        // /public, so there's nothing for next/image to optimise.
+        // /public, so there's nothing for next/image to optimise. object-contain
+        // on white so tall or wide product shots are never cropped.
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={item.image}
           alt=""
           loading="lazy"
-          className="h-full w-full object-cover"
+          className="h-full w-full object-contain p-2"
         />
       ) : (
         <span aria-hidden className="font-serif text-4xl text-neutral-300">
