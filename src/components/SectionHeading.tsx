@@ -42,7 +42,7 @@ export function SectionHeading({
       }`}
     >
       <div>
-        <p className="text-xs uppercase tracking-[0.18em] text-neutral-400">
+        <p className="text-xs uppercase tracking-[0.18em] text-neutral-500">
           {eyebrow}
         </p>
         <h2
@@ -53,12 +53,12 @@ export function SectionHeading({
       </div>
       <div className="flex shrink-0 items-baseline gap-3">
         {typeof count === "number" && (
-          <span className="font-mono text-xs text-neutral-400">
+          <span className="font-mono text-xs text-neutral-500">
             {String(count).padStart(2, "0")}
           </span>
         )}
         {collapsible && (
-          <ChevronDownIcon className="h-4 w-4 self-center text-neutral-400 transition-transform duration-200 group-open/section:rotate-180" />
+          <ChevronDownIcon className="h-4 w-4 self-center text-neutral-500 transition-transform duration-200 group-open/section:rotate-180" />
         )}
       </div>
     </div>
