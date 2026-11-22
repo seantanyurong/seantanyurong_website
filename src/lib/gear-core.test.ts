@@ -6,7 +6,7 @@ function row(
   id: string,
   name: string,
   category: string | null,
-  opts: { note?: string; link?: string; image?: string; order?: number; isPublic?: boolean } = {},
+  opts: { note?: string; image?: string; order?: number; isPublic?: boolean } = {},
 ) {
   return {
     id,
@@ -14,7 +14,6 @@ function row(
       Name: { type: "title", title: [{ plain_text: name }] },
       Category: { type: "select", select: category ? { name: category } : null },
       Note: { type: "rich_text", rich_text: opts.note ? [{ plain_text: opts.note }] : [] },
-      Link: { type: "url", url: opts.link ?? null },
       Image: { type: "url", url: opts.image ?? null },
       Order: { type: "number", number: opts.order ?? null },
       Public: { type: "checkbox", checkbox: opts.isPublic ?? true },
@@ -24,7 +23,7 @@ function row(
 
 test("parses public rows with their note (links are not used)", () => {
   const [item] = parseGear([
-    row("a", "Leatherman Arc", "EDC", { note: "Daily multitool", link: "https://example.com" }),
+    row("a", "Leatherman Arc", "EDC", { note: "Daily multitool" }),
   ]);
   assert.deepEqual(item, {
     slug: "a",
