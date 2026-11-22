@@ -66,7 +66,11 @@ export function PlacesMap({ pins }: { pins: Pin[] }) {
       </PlacesMapView>
       <p className="mt-6 text-sm text-neutral-500">
         {pins.length} {pins.length === 1 ? "city" : "cities"} across{" "}
-        {visited.size} {visited.size === 1 ? "country" : "countries"}.
+        {visited.size} {visited.size === 1 ? "country" : "countries"}.{" "}
+        <span className="text-neutral-400">
+          <span className="sm:hidden">Tap</span>
+          <span className="hidden sm:inline">Click</span> a dot to zoom in.
+        </span>
       </p>
     </div>
   );
