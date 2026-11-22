@@ -3,7 +3,7 @@
   No imports so the Node test runner can load this file directly.
 
   Columns read: Name (title), Category (select), Note (text), Link (url),
-  Order (number), Public (checkbox — only ticked rows are shown).
+  Image (url), Order (number), Public (checkbox — only ticked rows are shown).
 */
 
 export const GEAR_CATEGORIES = ["EDC", "Setup", "Travel", "Motorcycle"] as const;
@@ -15,6 +15,7 @@ export type GearItem = {
   category: GearCategory;
   note: string | null;
   link: string | null;
+  image: string | null;
   order: number | null;
 };
 
@@ -36,15 +37,17 @@ export function parseGear(pages: unknown[]): GearItem[] {
     const category = props.Category?.select?.name;
     if (!name || !GEAR_CATEGORIES.includes(category)) continue;
 
-    const link: unknown = props.Link?.url;
+    const webUrl = (v: unknown) =>
+      typeof v === "string" && /^https?:\/\//i.test(v) ? v : null;
     const order: unknown = props.Order?.number;
     items.push({
       slug: String(p.id),
       name,
       category,
       note: text(props.Note?.rich_text) || null,
-      // Only real web links — never javascript: or other schemes.
-      link: typeof link === "string" && /^https?:\/\//i.test(link) ? link : null,
+      // Only real web links — never javascript:, data: or other schemes.
+      link: webUrl(props.Link?.url),
+      image: webUrl(props.Image?.url),
       order: typeof order === "number" ? order : null,
     });
   }

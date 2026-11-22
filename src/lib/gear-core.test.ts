@@ -6,7 +6,7 @@ function row(
   id: string,
   name: string,
   category: string | null,
-  opts: { note?: string; link?: string; order?: number; isPublic?: boolean } = {},
+  opts: { note?: string; link?: string; image?: string; order?: number; isPublic?: boolean } = {},
 ) {
   return {
     id,
@@ -15,6 +15,7 @@ function row(
       Category: { type: "select", select: category ? { name: category } : null },
       Note: { type: "rich_text", rich_text: opts.note ? [{ plain_text: opts.note }] : [] },
       Link: { type: "url", url: opts.link ?? null },
+      Image: { type: "url", url: opts.image ?? null },
       Order: { type: "number", number: opts.order ?? null },
       Public: { type: "checkbox", checkbox: opts.isPublic ?? true },
     },
@@ -31,6 +32,7 @@ test("parses public rows with note and link", () => {
     category: "EDC",
     note: "Daily multitool",
     link: "https://example.com",
+    image: null,
     order: null,
   });
 });
@@ -73,4 +75,13 @@ test("sorts within a category by Order, then name; unordered items last", () => 
 test("only http(s) links are kept", () => {
   const [item] = parseGear([row("a", "Thing", "EDC", { link: "javascript:alert(1)" })]);
   assert.equal(item.link, null);
+});
+
+test("reads an http(s) image link and ignores anything else", () => {
+  const [ok, bad] = parseGear([
+    row("a", "Pack", "EDC", { image: "https://cdn.example.com/pack.jpg" }),
+    row("b", "Watch", "EDC", { image: "data:image/png;base64,AAAA" }),
+  ]);
+  assert.equal(ok.image, "https://cdn.example.com/pack.jpg");
+  assert.equal(bad.image, null);
 });
