@@ -93,3 +93,14 @@ test("reads an http(s) image link and ignores anything else", () => {
   assert.equal(ok.image, "https://cdn.example.com/pack.jpg");
   assert.equal(bad.image, null);
 });
+
+test("accepts a site path for the image, but not protocol-relative or odd paths", () => {
+  const [local, protoRel, traversal] = parseGear([
+    row("a", "Keyboard", "Desk", { image: "/gear/custom-keyboard.jpg" }),
+    row("b", "Sneaky", "Desk", { image: "//evil.example.com/x.jpg" }),
+    row("c", "Odd", "Desk", { image: "/gear/../secret.jpg" }),
+  ]);
+  assert.equal(local.image, "/gear/custom-keyboard.jpg");
+  assert.equal(protoRel.image, null);
+  assert.equal(traversal.image, null);
+});

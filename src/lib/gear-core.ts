@@ -16,6 +16,12 @@ export type GearItem = {
   order: number | null;
 };
 
+// A simple same-site path like "/gear/photo.jpg" — no "//host" or "..".
+const sitePath = (v: unknown) =>
+  typeof v === "string" && /^\/[\w\-./]+$/.test(v) && !v.startsWith("//") && !v.includes("..")
+    ? v
+    : null;
+
 const text = (parts: unknown): string =>
   ((parts ?? []) as { plain_text?: string }[])
     .map((t) => t.plain_text ?? "")
@@ -44,7 +50,8 @@ export function parseGear(pages: unknown[]): GearItem[] {
       note: text(props.Note?.rich_text) || null,
       // Only real web links — never javascript:, data: or other schemes.
       link: webUrl(props.Link?.url),
-      image: webUrl(props.Image?.url),
+      // Images may also be files in /public (e.g. "/gear/custom-keyboard.jpg").
+      image: webUrl(props.Image?.url) ?? sitePath(props.Image?.url),
       order: typeof order === "number" ? order : null,
     });
   }

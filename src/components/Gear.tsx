@@ -12,14 +12,14 @@ function Tile({ item }: { item: GearItem }) {
   const square = (
     <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl border border-neutral-100 bg-neutral-50 transition-colors group-hover:border-neutral-300">
       {item.image ? (
-        // Plain <img>: product photos are hot-linked from the maker's site,
-        // so there's nothing for next/image to optimise.
+        // Plain <img>: photos are either hot-linked or already-sized files in
+        // /public, so there's nothing for next/image to optimise.
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={item.image}
           alt=""
           loading="lazy"
-          className="h-full w-full object-contain p-4 mix-blend-multiply"
+          className="h-full w-full object-cover"
         />
       ) : (
         <span aria-hidden className="font-serif text-4xl text-neutral-300">
