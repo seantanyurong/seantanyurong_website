@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseSidequests } from "./sidequests-core.ts";
+import { groupSidequests, parseSidequests } from "./sidequests-core.ts";
 
 function row(
   id: string,
@@ -65,4 +65,35 @@ test("trims names and skips untitled or malformed rows", () => {
     {},
   ]);
   assert.deepEqual(items.map((s) => s.title), ["Build and paint"]);
+});
+
+test("each sidequest carries a status group and its quarter", () => {
+  const items = parseSidequests([
+    row("a", "Brawlhalla", "In Progress", ["2026 Q4"]),
+    row("b", "Smart room", "Completed", ["2025 Q3"]),
+    row("c", "Learn thai", "Incomplete"),
+    row("d", "Fish tank", "Incomplete", ["2025 Q1"]),
+  ]);
+  assert.deepEqual(
+    items.map((s) => [s.title, s.status, s.quarter]),
+    [
+      ["Brawlhalla", "now", "2026 Q4"],
+      ["Smart room", "done", "2025 Q3"],
+      ["Learn thai", "someday", null],
+      ["Fish tank", "someday", null],
+    ],
+  );
+});
+
+test("groupSidequests splits into now / done / someday, keeping order", () => {
+  const items = parseSidequests([
+    row("a", "A", "In Progress", ["2026 Q4"]),
+    row("b", "B", "Completed", ["2026 Q2"]),
+    row("c", "C", "Incomplete"),
+    row("d", "D", "Completed", ["2025 Q1"]),
+  ]);
+  const g = groupSidequests(items);
+  assert.deepEqual(g.now.map((s) => s.title), ["A"]);
+  assert.deepEqual(g.done.map((s) => s.title), ["B", "D"]);
+  assert.deepEqual(g.someday.map((s) => s.title), ["C"]);
 });
