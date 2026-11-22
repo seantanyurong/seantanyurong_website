@@ -196,7 +196,7 @@ export const NODES: LifeOsNode[] = [
   {
     id: "travel",
     kind: "box",
-    label: "Travel Planning",
+    label: "Travel Planning System",
     sub: "Notion",
     description:
       "Every trip gets a page from my trip template — itinerary, to-dos, budget and research — and once I've been, it shows up on the Places map.",
