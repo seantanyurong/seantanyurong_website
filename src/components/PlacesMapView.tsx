@@ -251,7 +251,7 @@ export function PlacesMapView({
                     ))}
                   </ul>
                   {multi && (
-                    <p className="mt-2 text-[11px] text-neutral-400">
+                    <p className="mt-2 text-[11px] text-neutral-500">
                       Click to zoom in
                     </p>
                   )}

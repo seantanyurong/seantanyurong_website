@@ -71,7 +71,7 @@ function TextCard({ project }: { project: Project }) {
     >
       <div>
         {kind && (
-          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-neutral-400">
+          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-neutral-500">
             {kind}
           </span>
         )}
@@ -87,7 +87,7 @@ function TextCard({ project }: { project: Project }) {
       <div className="mt-6 flex items-end justify-between">
         <time
           dateTime={project.date.toISOString()}
-          className="font-mono text-xs text-neutral-400"
+          className="font-mono text-xs text-neutral-500"
         >
           {formatDate(project.date)}
         </time>

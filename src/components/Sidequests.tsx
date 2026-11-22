@@ -13,8 +13,9 @@ import {
 
 function GroupLabel({ children }: { children: string }) {
   return (
-    <h3 className="mb-3 text-xs uppercase tracking-[0.18em] text-neutral-400">
+    <h3 className="mb-3 flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-neutral-600">
       {children}
+      <span aria-hidden className="h-px flex-1 bg-neutral-100" />
     </h3>
   );
 }
@@ -29,7 +30,7 @@ function Rows({ items }: { items: Sidequest[] }) {
         >
           <span className="text-[15px] text-neutral-900">{s.title}</span>
           {s.quarter && (
-            <span className="shrink-0 font-mono text-xs text-neutral-400">
+            <span className="shrink-0 font-mono text-xs text-neutral-500">
               {s.quarter}
             </span>
           )}

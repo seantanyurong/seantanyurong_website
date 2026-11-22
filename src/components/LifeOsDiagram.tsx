@@ -206,7 +206,7 @@ function NodeTitle({ node }: { node: LifeOsNode }) {
   return (
     <p className={`text-sm ${node.kind === "analog" ? "font-serif italic text-amber-900" : "font-medium text-neutral-900"}`}>
       {node.label}
-      {node.sub && <span className="font-normal text-neutral-400"> · {node.sub}</span>}
+      {node.sub && <span className="font-normal text-neutral-500"> · {node.sub}</span>}
     </p>
   );
 }
@@ -235,7 +235,7 @@ export function LifeOsDiagram() {
 
   return (
     <div ref={rootRef}>
-      <p className="mb-4 text-sm text-neutral-400 sm:hidden">
+      <p className="mb-4 text-sm text-neutral-500 sm:hidden">
         Tap any part of the diagram to see what it does.
       </p>
       <Diagram layout="desktop" active={active} onSelect={setActive} className="hidden h-auto w-full sm:block" />
@@ -268,7 +268,7 @@ export function LifeOsDiagram() {
               type="button"
               onClick={() => setActive(null)}
               aria-label="Close"
-              className="-mr-1 -mt-1 rounded-full px-2 text-lg leading-none text-neutral-400 hover:text-neutral-900"
+              className="-mr-1 -mt-1 rounded-full px-2 text-lg leading-none text-neutral-500 hover:text-neutral-900"
             >
               ×
             </button>
