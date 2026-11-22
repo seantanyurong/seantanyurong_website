@@ -7,7 +7,7 @@ import {
   Sidequests, grouped so what I'm doing and what I've finished aren't buried
   under the bucket list:
   - Now / Done: rows with the quarter on the right.
-  - Someday: compact wrapped chips.
+  - Future: compact wrapped chips.
   Sourced from Notion and sorted in the loader by status + recency.
 */
 
@@ -57,7 +57,7 @@ export function Sidequests({ items }: { items: Sidequest[] }) {
       )}
       {someday.length > 0 && (
         <div>
-          <GroupLabel>Someday</GroupLabel>
+          <GroupLabel>Future</GroupLabel>
           <ul className="flex flex-wrap gap-2">
             {someday.map((s) => (
               <li
