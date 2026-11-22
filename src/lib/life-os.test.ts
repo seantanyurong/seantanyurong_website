@@ -121,3 +121,16 @@ test("the database lists the tables the review system uses", () => {
 test("the time tracker is not part of the system", () => {
   assert.doesNotMatch(JSON.stringify({ NODES, INTRO }), /time.?tracker|hours/i);
 });
+
+test("box titles fit inside their boxes on both layouts", () => {
+  // Rough sans-serif width: ~0.5em per character. Box titles are 15px
+  // (x1.15 on phones) with 16px left padding.
+  for (const layout of ["desktop", "mobile"] as const) {
+    const scale = layout === "mobile" ? 1.15 : 1;
+    for (const n of NODES) {
+      if (n.kind !== "box") continue;
+      const width = n.label.length * 15 * scale * 0.5 + 16 + 8;
+      assert.ok(width <= n[layout].w, `"${n.label}" overflows its box on ${layout}`);
+    }
+  }
+});

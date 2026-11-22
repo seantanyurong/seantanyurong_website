@@ -6,7 +6,7 @@
 */
 
 export const DESKTOP = { width: 1000, height: 730 };
-export const MOBILE = { width: 400, height: 1500 };
+export const MOBILE = { width: 400, height: 1590 };
 
 type Rect = { x: number; y: number; w: number; h: number };
 
@@ -141,7 +141,7 @@ export const NODES: LifeOsNode[] = [
     description:
       "The point of everything above. Each ritual starts with the work already done, so I just show up and review.",
     desktop: { x: 20, y: 495, w: 960, h: 215 },
-    mobile: { x: 10, y: 1085, w: 380, h: 394 },
+    mobile: { x: 10, y: 1085, w: 380, h: 484 },
   },
   {
     id: "daily",
@@ -201,7 +201,7 @@ export const NODES: LifeOsNode[] = [
     description:
       "Every trip gets a page from my trip template — itinerary, to-dos, budget and research — and once I've been, it shows up on the Places map.",
     desktop: { x: 40, y: 630, w: 260, h: 60 },
-    mobile: { x: 210, y: 1395, w: 165, h: 64 },
+    mobile: { x: 25, y: 1485, w: 350, h: 64 },
   },
   {
     id: "album",
