@@ -2,8 +2,8 @@
   Turns rows from the Notion "Gear" database into the Gear section's rows.
   No imports so the Node test runner can load this file directly.
 
-  Columns read: Name (title), Category (select), Note (text), Link (url),
-  Image (url), Order (number), Public (checkbox — only ticked rows are shown).
+  Columns read: Name (title), Category (select), Note (text), Image (url or
+  /gear/... path), Order (number), Public (checkbox — only ticked rows show).
 */
 
 export type GearItem = {
@@ -11,7 +11,6 @@ export type GearItem = {
   name: string;
   category: string; // a Category option from Notion (e.g. EDC, Desk)
   note: string | null;
-  link: string | null;
   image: string | null;
   order: number | null;
 };
@@ -49,7 +48,6 @@ export function parseGear(pages: unknown[]): GearItem[] {
       category,
       note: text(props.Note?.rich_text) || null,
       // Only real web links — never javascript:, data: or other schemes.
-      link: webUrl(props.Link?.url),
       // Images may also be files in /public (e.g. "/gear/custom-keyboard.jpg").
       image: webUrl(props.Image?.url) ?? sitePath(props.Image?.url),
       order: typeof order === "number" ? order : null,

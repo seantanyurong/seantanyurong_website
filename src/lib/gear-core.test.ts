@@ -22,7 +22,7 @@ function row(
   };
 }
 
-test("parses public rows with note and link", () => {
+test("parses public rows with their note (links are not used)", () => {
   const [item] = parseGear([
     row("a", "Leatherman Arc", "EDC", { note: "Daily multitool", link: "https://example.com" }),
   ]);
@@ -31,7 +31,6 @@ test("parses public rows with note and link", () => {
     name: "Leatherman Arc",
     category: "EDC",
     note: "Daily multitool",
-    link: "https://example.com",
     image: null,
     order: null,
   });
@@ -80,10 +79,6 @@ test("sorts within a category by Order, then name; unordered items last", () => 
   assert.deepEqual(group.items.map((i) => i.name), ["Gamma", "Beta", "Alpha", "Zeta"]);
 });
 
-test("only http(s) links are kept", () => {
-  const [item] = parseGear([row("a", "Thing", "EDC", { link: "javascript:alert(1)" })]);
-  assert.equal(item.link, null);
-});
 
 test("reads an http(s) image link and ignores anything else", () => {
   const [ok, bad] = parseGear([
