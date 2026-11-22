@@ -28,12 +28,14 @@ export function SectionHeading({
   accent,
   count,
   collapsible = false,
+  as: Title = "h2",
 }: {
   eyebrow: string;
   title: string;
   accent: Accent;
   count?: number;
   collapsible?: boolean;
+  as?: "h1" | "h2"; // h1 when the heading tops its own page
 }) {
   return (
     <div
@@ -45,11 +47,11 @@ export function SectionHeading({
         <p className="text-xs uppercase tracking-[0.18em] text-neutral-500">
           {eyebrow}
         </p>
-        <h2
+        <Title
           className={`mt-1 font-serif text-3xl font-normal leading-tight text-neutral-900 underline decoration-4 underline-offset-[6px] sm:text-4xl ${accentDecoration[accent]}`}
         >
           {title}
-        </h2>
+        </Title>
       </div>
       <div className="flex shrink-0 items-baseline gap-3">
         {typeof count === "number" && (

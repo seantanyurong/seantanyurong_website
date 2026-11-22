@@ -54,10 +54,10 @@ export function PlacesMap({ pins }: { pins: Pin[] }) {
           <path
             key={i}
             d={d}
-            className={`stroke-white ${
+            className={`stroke-paper ${
               id !== undefined && visited.has(id)
                 ? "fill-teal-100"
-                : "fill-neutral-100"
+                : "fill-neutral-200"
             }`}
             strokeWidth={0.5}
             vectorEffect="non-scaling-stroke"

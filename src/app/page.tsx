@@ -5,13 +5,11 @@ import { ProjectsGrid } from "@/components/ProjectsGrid";
 import { Sidequests } from "@/components/Sidequests";
 import { Footer } from "@/components/Footer";
 import { PlacesMap } from "@/components/PlacesMap";
-import { LifeOsDiagram } from "@/components/LifeOsDiagram";
-import { INTRO } from "@/lib/life-os";
 import { getProjects } from "@/lib/content";
 import { getPlacePins } from "@/lib/places";
 import { getSidequests } from "@/lib/sidequests";
 import { getGear } from "@/lib/gear";
-import { Gear } from "@/components/Gear";
+import { MoreTeasers } from "@/components/MoreTeasers";
 
 // Re-fetch trips, sidequests and gear from Notion at most once a day.
 export const revalidate = 86400;
@@ -80,46 +78,6 @@ export default async function HomePage() {
           </section>
         )}
 
-        <section id="life-os" className="scroll-mt-24 pb-20">
-          <details
-            open
-            className="group/section [&_summary::-webkit-details-marker]:hidden"
-          >
-            <summary className="mb-8 cursor-pointer list-none rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-blue-300">
-              <SectionHeading
-                eyebrow="How I run things"
-                title="Life OS"
-                accent="lime"
-                collapsible
-              />
-            </summary>
-            <p className="mb-8 max-w-prose text-[15px] leading-relaxed text-neutral-700">
-              {INTRO}
-            </p>
-            <LifeOsDiagram />
-          </details>
-        </section>
-
-        {gear.items.length > 0 && (
-          <section id="gear" className="scroll-mt-24 pb-20">
-            <details
-              open
-              className="group/section [&_summary::-webkit-details-marker]:hidden"
-            >
-              <summary className="mb-8 cursor-pointer list-none rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-blue-300">
-                <SectionHeading
-                  eyebrow="What I use"
-                  title="Gear"
-                  accent="rose"
-                  count={gear.items.length}
-                  collapsible
-                />
-              </summary>
-              <Gear items={gear.items} categories={gear.categories} />
-            </details>
-          </section>
-        )}
-
         {pins.length > 0 && (
           <section id="places" className="scroll-mt-24 pb-20">
             <details
@@ -139,6 +97,11 @@ export default async function HomePage() {
             </details>
           </section>
         )}
+
+        <section id="more" className="scroll-mt-24 pb-20">
+          <SectionHeading eyebrow="Go deeper" title="More" accent="orange" />
+          <MoreTeasers gear={gear.items} categories={gear.categories} />
+        </section>
 
         <Footer />
       </main>
