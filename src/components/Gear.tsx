@@ -2,7 +2,7 @@ import { groupGear, type GearItem } from "@/lib/gear-core";
 import { GearRow } from "./GearRow";
 
 /*
-  Gear — one swipeable row per category (EDC, Setup, Travel, Motorcycle) of
+  Gear — one swipeable row per category (in Notion's option order) of
   square tiles: product photo (or the item's initial until there is one),
   then the name (linked when there's a link) and a short note.
   Sourced from the Notion "Gear" database.
@@ -58,8 +58,8 @@ function Tile({ item }: { item: GearItem }) {
   );
 }
 
-export function Gear({ items }: { items: GearItem[] }) {
-  const groups = groupGear(items);
+export function Gear({ items, categories }: { items: GearItem[]; categories: string[] }) {
+  const groups = groupGear(items, categories);
   return (
     <div className="space-y-10">
       {groups.map((group) => (

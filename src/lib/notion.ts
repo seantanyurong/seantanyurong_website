@@ -61,3 +61,23 @@ export async function withNotionFallback<T>(
     throw err;
   }
 }
+
+/* Option names of a select property, in the order they're arranged in Notion. */
+export async function getSelectOptions(
+  dataSourceId: string,
+  property: string,
+  { timeoutMs = 10_000 }: QueryOptions = {},
+): Promise<string[]> {
+  const token = process.env.NOTION_TOKEN;
+  if (!token) throw new Error("NOTION_TOKEN is not set");
+  const res = await fetch(`https://api.notion.com/v1/data_sources/${dataSourceId}`, {
+    headers: { Authorization: `Bearer ${token}`, "Notion-Version": NOTION_VERSION },
+    signal: AbortSignal.timeout(timeoutMs),
+  });
+  if (!res.ok) {
+    throw new Error(`Notion data source fetch failed: ${res.status} ${await res.text()}`);
+  }
+  const data = await res.json();
+  const options: { name?: string }[] = data?.properties?.[property]?.select?.options ?? [];
+  return options.map((o) => o.name ?? "").filter(Boolean);
+}

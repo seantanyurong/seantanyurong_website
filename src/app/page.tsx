@@ -100,7 +100,7 @@ export default async function HomePage() {
           </details>
         </section>
 
-        {gear.length > 0 && (
+        {gear.items.length > 0 && (
           <section id="gear" className="scroll-mt-24 pb-20">
             <details
               open
@@ -111,11 +111,11 @@ export default async function HomePage() {
                   eyebrow="What I use"
                   title="Gear"
                   accent="rose"
-                  count={gear.length}
+                  count={gear.items.length}
                   collapsible
                 />
               </summary>
-              <Gear items={gear} />
+              <Gear items={gear.items} categories={gear.categories} />
             </details>
           </section>
         )}

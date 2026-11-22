@@ -42,32 +42,40 @@ test("skips private, untitled, uncategorised and malformed rows", () => {
     row("a", "Hidden", "EDC", { isPublic: false }),
     row("b", "  ", "EDC"),
     row("c", "No category", null),
-    row("d", "Unknown category", "Kitchen"),
     null,
     {},
   ]);
   assert.deepEqual(items, []);
 });
 
-test("groups in EDC, Setup, Travel, Motorcycle order and drops empty groups", () => {
+test("accepts any category name from Notion", () => {
+  const [item] = parseGear([row("a", "Racquet", "Tennis")]);
+  assert.equal(item.category, "Tennis");
+});
+
+test("groups in Notion's option order, drops empty groups, unknowns last", () => {
   const groups = groupGear(
     parseGear([
+      row("t", "Racquet", "Tennis"),
       row("m", "Helmet", "Motorcycle"),
-      row("s", "Keyboard", "Setup"),
+      row("d", "Keyboard", "Desk"),
       row("e", "Knife", "EDC"),
+      row("z", "Mystery", "Zzz"),
     ]),
+    ["EDC", "Desk", "Travel", "Motorcycle", "Tennis"],
   );
-  assert.deepEqual(groups.map((g) => g.category), ["EDC", "Setup", "Motorcycle"]);
+  assert.deepEqual(groups.map((g) => g.category), ["EDC", "Desk", "Motorcycle", "Tennis", "Zzz"]);
 });
 
 test("sorts within a category by Order, then name; unordered items last", () => {
   const [group] = groupGear(
     parseGear([
-      row("1", "Zeta", "Setup"),
-      row("2", "Beta", "Setup", { order: 2 }),
-      row("3", "Alpha", "Setup"),
-      row("4", "Gamma", "Setup", { order: 1 }),
+      row("1", "Zeta", "Desk"),
+      row("2", "Beta", "Desk", { order: 2 }),
+      row("3", "Alpha", "Desk"),
+      row("4", "Gamma", "Desk", { order: 1 }),
     ]),
+    ["Desk"],
   );
   assert.deepEqual(group.items.map((i) => i.name), ["Gamma", "Beta", "Alpha", "Zeta"]);
 });
