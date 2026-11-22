@@ -224,7 +224,7 @@ export function PlacesMapView({
                 className="group/pin flex h-6 w-6 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
               >
                 <span
-                  className={`block rounded-full bg-teal-500 ring-2 ring-white transition-transform duration-150 group-hover/pin:scale-125 ${
+                  className={`block rounded-full bg-teal-500 ring-2 ring-paper transition-transform duration-150 group-hover/pin:scale-125 ${
                     multi ? "h-3 w-3" : "h-2 w-2"
                   } ${isActive ? "scale-125" : ""}`}
                 />

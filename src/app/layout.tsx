@@ -39,7 +39,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-white text-neutral-900">{children}</body>
+      <body className="min-h-full text-neutral-900">{children}</body>
     </html>
   );
 }
