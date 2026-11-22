@@ -14,6 +14,7 @@ const items: NavItem[] = [
   { id: "projects", label: "Projects" },
   { id: "sidequests", label: "Sidequests" },
   { id: "life-os", label: "Life OS" },
+  { id: "gear", label: "Gear" },
   { id: "places", label: "Places" },
 ];
 
@@ -82,7 +83,7 @@ export function Nav() {
               linkRefs.current[item.id] = el;
             }}
             href={`#${item.id}`}
-            className={`rounded-full px-3 py-1 text-sm tracking-tight transition-colors focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:outline-none ${
+            className={`rounded-full px-2 py-1 text-[13px] tracking-tight sm:px-3 sm:text-sm transition-colors focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:outline-none ${
               active === item.id
                 ? "text-neutral-900"
                 : "text-neutral-500 hover:text-neutral-900"

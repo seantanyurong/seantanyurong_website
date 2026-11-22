@@ -10,15 +10,18 @@ import { INTRO } from "@/lib/life-os";
 import { getProjects } from "@/lib/content";
 import { getPlacePins } from "@/lib/places";
 import { getSidequests } from "@/lib/sidequests";
+import { getGear } from "@/lib/gear";
+import { Gear } from "@/components/Gear";
 
-// Re-fetch trips and sidequests from Notion at most once a day.
+// Re-fetch trips, sidequests and gear from Notion at most once a day.
 export const revalidate = 86400;
 
 export default async function HomePage() {
-  const [projects, sidequests, pins] = await Promise.all([
+  const [projects, sidequests, pins, gear] = await Promise.all([
     getProjects(),
     getSidequests(),
     getPlacePins(),
+    getGear(),
   ]);
 
   return (
@@ -96,6 +99,26 @@ export default async function HomePage() {
             <LifeOsDiagram />
           </details>
         </section>
+
+        {gear.length > 0 && (
+          <section id="gear" className="scroll-mt-24 pb-20">
+            <details
+              open
+              className="group/section [&_summary::-webkit-details-marker]:hidden"
+            >
+              <summary className="mb-8 cursor-pointer list-none rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-blue-300">
+                <SectionHeading
+                  eyebrow="What I use"
+                  title="Gear"
+                  accent="rose"
+                  count={gear.length}
+                  collapsible
+                />
+              </summary>
+              <Gear items={gear} />
+            </details>
+          </section>
+        )}
 
         {pins.length > 0 && (
           <section id="places" className="scroll-mt-24 pb-20">
