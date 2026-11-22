@@ -6,16 +6,20 @@
   Public (checkbox — only ticked rows are shown).
 */
 
+export type SidequestStatus = "now" | "done" | "someday";
+
 export type Sidequest = {
   slug: string;
   title: string;
   // e.g. "Done - 2025 Q3", "In Progress - 2026 Q4", "In the future"
   description: string;
+  status: SidequestStatus;
+  quarter: string | null; // latest quarter, only for now/done
 };
 
-const STATUS_LABEL: Record<string, string> = {
-  Completed: "Done",
-  "In Progress": "In Progress",
+const STATUS: Record<string, { label: string; status: SidequestStatus }> = {
+  Completed: { label: "Done", status: "done" },
+  "In Progress": { label: "In Progress", status: "now" },
 };
 
 export function parseSidequests(pages: unknown[]): Sidequest[] {
@@ -32,22 +36,32 @@ export function parseSidequests(pages: unknown[]): Sidequest[] {
       .trim();
     if (!title) continue;
 
-    const label = STATUS_LABEL[props.Status?.select?.name];
+    const known = STATUS[props.Status?.select?.name];
     const quarters = ((props.Quarter?.multi_select ?? []) as { name?: string }[])
       .map((q) => q.name ?? "")
       .filter(Boolean)
       .sort();
-    const latest = quarters.at(-1);
+    const latest = known ? (quarters.at(-1) ?? null) : null;
 
     items.push({
       slug: String(p.id),
       title,
-      description: label
+      description: known
         ? latest
-          ? `${label} - ${latest}`
-          : label
+          ? `${known.label} - ${latest}`
+          : known.label
         : "In the future",
+      status: known?.status ?? "someday",
+      quarter: latest,
     });
   }
   return items;
+}
+
+export function groupSidequests(items: Sidequest[]) {
+  return {
+    now: items.filter((s) => s.status === "now"),
+    done: items.filter((s) => s.status === "done"),
+    someday: items.filter((s) => s.status === "someday"),
+  };
 }

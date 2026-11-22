@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import {
   DESKTOP,
   EDGES,
@@ -202,22 +202,50 @@ function Diagram({
   );
 }
 
+function NodeTitle({ node }: { node: LifeOsNode }) {
+  return (
+    <p className={`text-sm ${node.kind === "analog" ? "font-serif italic text-amber-900" : "font-medium text-neutral-900"}`}>
+      {node.label}
+      {node.sub && <span className="font-normal text-neutral-400"> · {node.sub}</span>}
+    </p>
+  );
+}
+
 export function LifeOsDiagram() {
   const [active, setActive] = useState<string | null>(null);
   const node = NODES.find((n) => n.id === active);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  // Escape or a tap outside the diagram (and its card) closes the details.
+  useEffect(() => {
+    if (!active) return;
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key === "Escape") setActive(null);
+    };
+    const onDown = (e: PointerEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setActive(null);
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onDown);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onDown);
+    };
+  }, [active]);
 
   return (
-    <div>
+    <div ref={rootRef}>
+      <p className="mb-4 text-sm text-neutral-400 sm:hidden">
+        Tap any part of the diagram to see what it does.
+      </p>
       <Diagram layout="desktop" active={active} onSelect={setActive} className="hidden h-auto w-full sm:block" />
       <Diagram layout="mobile" active={active} onSelect={setActive} className="h-auto w-full sm:hidden" />
 
-      <div aria-live="polite" className="mt-6 min-h-[5.5rem] rounded-lg border border-neutral-100 bg-neutral-50 px-4 py-3">
+      {/* Desktop: panel under the diagram. */}
+      <div aria-live="polite" className="mt-6 hidden min-h-[5.5rem] rounded-lg border border-neutral-100 bg-neutral-50 px-4 py-3 sm:block">
         {node ? (
           <>
-            <p className={`text-sm ${node.kind === "analog" ? "font-serif italic text-amber-900" : "font-medium text-neutral-900"}`}>
-              {node.label}
-              {node.sub && <span className="font-normal text-neutral-400"> · {node.sub}</span>}
-            </p>
+            <NodeTitle node={node} />
             <p className="mt-1 text-sm leading-relaxed text-neutral-600">{node.description}</p>
           </>
         ) : (
@@ -226,6 +254,28 @@ export function LifeOsDiagram() {
           </p>
         )}
       </div>
+
+      {/* Phones: the diagram is tall, so details pop up pinned to the bottom of the screen. */}
+      {node && (
+        <div
+          role="dialog"
+          aria-label={node.label}
+          className="fade-up fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 rounded-xl border border-neutral-200 bg-white/95 px-4 py-3 shadow-lg backdrop-blur-md sm:hidden"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <NodeTitle node={node} />
+            <button
+              type="button"
+              onClick={() => setActive(null)}
+              aria-label="Close"
+              className="-mr-1 -mt-1 rounded-full px-2 text-lg leading-none text-neutral-400 hover:text-neutral-900"
+            >
+              ×
+            </button>
+          </div>
+          <p className="mt-1 text-sm leading-relaxed text-neutral-600">{node.description}</p>
+        </div>
+      )}
     </div>
   );
 }
