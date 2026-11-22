@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { WrenchScrewdriverIcon } from "@heroicons/react/20/solid";
+
 /*
   Hero — large serif name, short tagline, intro paragraph.
   Mirrors the restraint of jordienric.com with chester.how's serif/sans contrast.
@@ -86,6 +89,15 @@ export function Hero() {
             LinkedIn
           </span>
         </a>
+        <Link
+          href="/gear"
+          className="group inline-flex items-center gap-2 transition-colors hover:text-neutral-900"
+        >
+          <WrenchScrewdriverIcon className="h-4 w-4" />
+          <span className="underline decoration-neutral-300 underline-offset-4 transition-colors group-hover:decoration-neutral-900">
+            Gear
+          </span>
+        </Link>
       </div>
     </section>
   );
