@@ -1,8 +1,9 @@
 import { groupGear, type GearItem } from "@/lib/gear-core";
+import { GearRow } from "./GearRow";
 
 /*
-  Gear — one row per category (EDC, Setup, Travel, Motorcycle), each a shelf
-  of square tiles: product photo (or the item's initial until there is one),
+  Gear — one swipeable row per category (EDC, Setup, Travel, Motorcycle) of
+  square tiles: product photo (or the item's initial until there is one),
   then the name (linked when there's a link) and a short note.
   Sourced from the Notion "Gear" database.
 */
@@ -62,19 +63,16 @@ export function Gear({ items }: { items: GearItem[] }) {
   return (
     <div className="space-y-10">
       {groups.map((group) => (
-        <div key={group.category}>
-          <h3 className="mb-4 flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-neutral-600">
-            {group.category}
-            <span aria-hidden className="h-px flex-1 bg-neutral-100" />
-          </h3>
-          <ul className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 lg:grid-cols-4">
-            {group.items.map((item) => (
-              <li key={item.slug}>
-                <Tile item={item} />
-              </li>
-            ))}
-          </ul>
-        </div>
+        <GearRow key={group.category} title={group.category}>
+          {group.items.map((item) => (
+            <li
+              key={item.slug}
+              className="w-[calc((100%-2rem)/2.3)] flex-none snap-start sm:w-40"
+            >
+              <Tile item={item} />
+            </li>
+          ))}
+        </GearRow>
       ))}
     </div>
   );
