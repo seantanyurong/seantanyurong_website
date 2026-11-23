@@ -30,7 +30,9 @@ test("every edge has a path for both layouts", () => {
 test("covers the parts Sean asked for", () => {
   for (const id of [
     "droplet", "hermes", "server", "telegram", "notion", "calendar", "website",
-    "rituals", "daily", "weekly", "monthly", "quarterly", "yearly", "travel", "album", "photos",
+    "rituals", "weekly", "monthly", "quarterly", "yearly", "album", "photos",
+    "todo", "tasks", "daily",
+    "travel", "tripPlanner", "tripAlbum",
   ]) {
     assert.ok(ids.has(id), `missing ${id}`);
   }
@@ -38,7 +40,7 @@ test("covers the parts Sean asked for", () => {
   for (const gone of ["sheet", "dashboard", "reviews"]) {
     assert.ok(!ids.has(gone), `${gone} should be folded into rituals`);
   }
-  for (const [a, b] of [["daily", "weekly"], ["weekly", "monthly"], ["monthly", "quarterly"]]) {
+  for (const [a, b] of [["weekly", "monthly"], ["monthly", "quarterly"]]) {
     assert.ok(EDGES.some((e) => e.from === a && e.to === b), `${a} -> ${b}`);
   }
   assert.ok(
@@ -67,7 +69,7 @@ test("the rituals frame contains every ritual on both layouts", () => {
   assert.equal(box.kind, "group");
   for (const layout of ["desktop", "mobile"] as const) {
     const outer = box[layout];
-    for (const id of ["daily", "weekly", "monthly", "quarterly", "yearly", "travel", "album", "photos"]) {
+    for (const id of ["weekly", "monthly", "quarterly", "yearly", "album", "photos"]) {
       const r = byId[id][layout];
       assert.ok(
         r.x >= outer.x && r.y >= outer.y &&
@@ -133,4 +135,49 @@ test("box titles fit inside their boxes on both layouts", () => {
       assert.ok(width <= n[layout].w, `"${n.label}" overflows its box on ${layout}`);
     }
   }
+});
+
+test("travel is its own system: planner then album, fed by the database", () => {
+  const byId = Object.fromEntries(NODES.map((n) => [n.id, n]));
+  assert.equal(byId.travel?.kind, "group");
+  for (const layout of ["desktop", "mobile"] as const) {
+    const o = byId.travel[layout];
+    const r = byId.rituals[layout];
+    const overlap = o.x < r.x + r.w && r.x < o.x + o.w && o.y < r.y + r.h && r.y < o.y + o.h;
+    assert.ok(!overlap, `travel frame overlaps rituals on ${layout}`);
+    for (const id of ["tripPlanner", "tripAlbum"]) {
+      const b = byId[id][layout];
+      assert.ok(
+        b.x >= o.x && b.y >= o.y && b.x + b.w <= o.x + o.w && b.y + b.h <= o.y + o.h,
+        `${id} sticks out of the travel frame on ${layout}`,
+      );
+    }
+  }
+  assert.ok(EDGES.some((e) => e.from === "notion" && e.to === "travel"));
+  assert.ok(EDGES.some((e) => e.from === "tripPlanner" && e.to === "tripAlbum" && e.dashed));
+  assert.match(byId.tripPlanner.sub ?? "", /notion/i);
+  assert.match(byId.tripAlbum.sub ?? "", /google photos/i);
+});
+
+test("todos are their own system: task list feeds the daily dashboard", () => {
+  const byId = Object.fromEntries(NODES.map((n) => [n.id, n]));
+  assert.equal(byId.todo?.kind, "group");
+  for (const layout of ["desktop", "mobile"] as const) {
+    const o = byId.todo[layout];
+    for (const other of ["rituals", "travel"]) {
+      const r = byId[other][layout];
+      const overlap = o.x < r.x + r.w && r.x < o.x + o.w && o.y < r.y + r.h && r.y < o.y + o.h;
+      assert.ok(!overlap, `todo frame overlaps ${other} on ${layout}`);
+    }
+    for (const id of ["tasks", "daily"]) {
+      const b = byId[id][layout];
+      assert.ok(
+        b.x >= o.x && b.y >= o.y && b.x + b.w <= o.x + o.w && b.y + b.h <= o.y + o.h,
+        `${id} sticks out of the todo frame on ${layout}`,
+      );
+    }
+  }
+  assert.ok(EDGES.some((e) => e.from === "notion" && e.to === "todo"));
+  assert.ok(EDGES.some((e) => e.from === "tasks" && e.to === "daily"));
+  assert.ok(!EDGES.some((e) => e.from === "daily" && e.to === "weekly"));
 });
