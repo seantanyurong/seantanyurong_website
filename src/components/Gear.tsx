@@ -10,7 +10,7 @@ import { GearRow } from "./GearRow";
 
 function Tile({ item }: { item: GearItem }) {
   const square = (
-    <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl border border-neutral-100 bg-neutral-50">
+    <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
       {item.image ? (
         // Plain <img>: photos are either hot-linked or already-sized files in
         // /public, so there's nothing for next/image to optimise.

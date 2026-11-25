@@ -48,7 +48,7 @@ export function GearRow({ title, children }: { title: string; children: ReactNod
         <h3 className="text-xs font-medium uppercase tracking-[0.18em] text-neutral-600">
           {title}
         </h3>
-        <span aria-hidden className="h-px flex-1 bg-neutral-100" />
+        <span aria-hidden className="h-px flex-1 bg-neutral-200" />
         {overflowing && (
           <div className="hidden gap-2 sm:flex">
             <button type="button" aria-label={`Scroll ${title} left`} className={button} disabled={!edges.prev} onClick={() => page(-1)}>

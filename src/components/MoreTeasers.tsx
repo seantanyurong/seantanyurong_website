@@ -105,7 +105,7 @@ export function MoreTeasers({
               {previews.map((g) => (
                 <div
                   key={g.slug}
-                  className="aspect-square overflow-hidden rounded-lg border border-neutral-100 bg-neutral-50"
+                  className="aspect-square overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img

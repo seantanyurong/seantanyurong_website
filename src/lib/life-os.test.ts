@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { EDGES, INTRO, NODES } from "./life-os.ts";
+import { EDGES, INTRO, NODES, dbSectionBands } from "./life-os.ts";
 
 const ids = new Set(NODES.map((n) => n.id));
 
@@ -114,7 +114,7 @@ test("the website sits inside a Vercel frame on both layouts", () => {
 });
 
 test("the database lists the tables the review system uses", () => {
-  const tables = NODES.find((n) => n.id === "notion")!.lines ?? [];
+  const tables = (NODES.find((n) => n.id === "notion")!.sections ?? []).flatMap((s) => s.tables);
   for (const t of ["weekly_reviews", "quarterly_reviews", "goals"]) {
     assert.ok(tables.includes(t), `missing table ${t}`);
   }
@@ -180,4 +180,43 @@ test("todos are their own system: task list feeds the daily dashboard", () => {
   assert.ok(EDGES.some((e) => e.from === "notion" && e.to === "todo"));
   assert.ok(EDGES.some((e) => e.from === "tasks" && e.to === "daily"));
   assert.ok(!EDGES.some((e) => e.from === "daily" && e.to === "weekly"));
+});
+
+test("the database groups its tables by what uses them", () => {
+  const notion = NODES.find((n) => n.id === "notion")!;
+  const sections = notion.sections ?? [];
+  assert.deepEqual(
+    sections.map((s) => s.id),
+    ["money", "travel", "tasks", "gear", "reviews"],
+  );
+  const tables = sections.flatMap((s) => s.tables);
+  assert.equal(new Set(tables).size, tables.length, "a table is listed twice");
+  for (const t of ["expenses", "travel", "trip_stops", "actions", "gear", "side_quests"]) {
+    assert.ok(tables.includes(t), `missing table ${t}`);
+  }
+});
+
+test("section arrows leave from their section's rows, inside the database", () => {
+  const notion = NODES.find((n) => n.id === "notion")!;
+  const sectionEdges = EDGES.filter((e) => e.fromSection);
+  assert.deepEqual(
+    sectionEdges.map((e) => `${e.fromSection}->${e.to}`).sort(),
+    ["reviews->rituals", "tasks->todo", "travel->travel"],
+  );
+  for (const layout of ["desktop", "mobile"] as const) {
+    const bands = dbSectionBands(notion, layout);
+    const r = notion[layout];
+    // Every section fits inside the cylinder (above its curved bottom).
+    assert.ok(bands.at(-1)!.bottom <= r.y + r.h - 18, `sections overflow the database on ${layout}`);
+    for (const e of sectionEdges) {
+      const band = bands.find((b) => b.id === e.fromSection)!;
+      const [, x, y] = e[layout].match(/^M\s*([\d.]+)[\s,]+([\d.]+)/)!.map(Number);
+      const onSide = x === r.x || x === r.x + r.w;
+      const fromBottom = y >= r.y + r.h - 20 && band === bands.at(-1);
+      assert.ok(
+        (onSide && y >= band.top && y <= band.bottom) || fromBottom,
+        `${e.fromSection} -> ${e.to} does not leave from its section on ${layout}`,
+      );
+    }
+  }
 });

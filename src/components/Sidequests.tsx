@@ -15,14 +15,14 @@ function GroupLabel({ children }: { children: string }) {
   return (
     <h3 className="mb-3 flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-neutral-600">
       {children}
-      <span aria-hidden className="h-px flex-1 bg-neutral-100" />
+      <span aria-hidden className="h-px flex-1 bg-neutral-200" />
     </h3>
   );
 }
 
 function Rows({ items }: { items: Sidequest[] }) {
   return (
-    <ul className="divide-y divide-neutral-100">
+    <ul className="divide-y divide-neutral-200">
       {items.map((s) => (
         <li
           key={s.slug}
