@@ -3,7 +3,7 @@
 */
 export function Footer() {
   return (
-    <footer className="mt-4 border-t border-neutral-100 py-10 text-center text-xs text-neutral-400">
+    <footer className="mt-4 border-t border-neutral-200 py-10 text-center text-xs text-neutral-400">
       <a
         href="https://www.linkedin.com/in/seantanyurong/"
         target="_blank"

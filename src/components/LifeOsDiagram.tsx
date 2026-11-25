@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { createPortal } from "react-dom";
 import {
+  DB_ROWS,
   DESKTOP,
   EDGES,
   MOBILE,
   NODES,
+  dbSectionBands,
   type LifeOsNode,
 } from "@/lib/life-os";
 
@@ -86,11 +89,24 @@ function Node({
         <text x={x + w / 2} y={y + 84} textAnchor="middle" className="fill-teal-700 font-sans" fontSize={11 * fs}>
           {node.sub}
         </text>
-        {node.lines?.map((line, i) => (
-          <text key={line} x={x + 28} y={y + 114 + i * 21} className="fill-teal-900 font-mono" fontSize={12 * fs}>
-            <tspan className="fill-teal-400">▸ </tspan>
-            {line}
-          </text>
+        {dbSectionBands(node, layout).map((band) => (
+          <g key={band.id}>
+            <text
+              x={x + 24} y={band.top + 11 * fs}
+              className="fill-teal-600 font-sans uppercase" fontSize={9.5 * fs} letterSpacing="0.14em"
+            >
+              {band.label}
+            </text>
+            {band.tables.map((table, i) => (
+              <text
+                key={table} x={x + 32}
+                y={band.top + (DB_ROWS.header + (i + 1) * DB_ROWS.line - 5) * fs}
+                className="fill-teal-900 font-mono" fontSize={12 * fs}
+              >
+                {table}
+              </text>
+            ))}
+          </g>
         ))}
       </g>
     );
@@ -198,8 +214,20 @@ function Diagram({
       {NODES.filter((n) => n.kind !== "group").map((n) => (
         <Node key={n.id} node={n} layout={layout} active={active === n.id} onSelect={onSelect} />
       ))}
+
+      {/* Dots on top, where arrows leave their database section. */}
+      {EDGES.filter((e) => e.fromSection).map((e) => (
+        <SectionPort key={`${e.from}-${e.to}-port`} d={e[layout]} />
+      ))}
     </svg>
   );
+}
+
+// A small dot where an arrow leaves its database section.
+function SectionPort({ d }: { d: string }) {
+  const [, cx, cy] = d.match(/^M\s*([\d.]+)[\s,]+([\d.]+)/) ?? [];
+  if (!cx) return null;
+  return <circle cx={cx} cy={cy} r={3.5} className="fill-teal-500 stroke-teal-50" strokeWidth={1.5} />;
 }
 
 function NodeTitle({ node }: { node: LifeOsNode }) {
@@ -215,6 +243,7 @@ export function LifeOsDiagram() {
   const [active, setActive] = useState<string | null>(null);
   const node = NODES.find((n) => n.id === active);
   const rootRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   // Escape or a tap outside the diagram (and its card) closes the details.
   useEffect(() => {
@@ -223,7 +252,8 @@ export function LifeOsDiagram() {
       if (e.key === "Escape") setActive(null);
     };
     const onDown = (e: PointerEvent) => {
-      if (!rootRef.current?.contains(e.target as Node)) setActive(null);
+      const target = e.target as Node;
+      if (!rootRef.current?.contains(target) && !cardRef.current?.contains(target)) setActive(null);
     };
     document.addEventListener("keydown", onKey);
     document.addEventListener("pointerdown", onDown);
@@ -242,7 +272,7 @@ export function LifeOsDiagram() {
       <Diagram layout="mobile" active={active} onSelect={setActive} className="h-auto w-full sm:hidden" />
 
       {/* Desktop: panel under the diagram. */}
-      <div aria-live="polite" className="mt-6 hidden min-h-[5.5rem] rounded-lg border border-neutral-100 bg-neutral-50 px-4 py-3 sm:block">
+      <div aria-live="polite" className="mt-6 hidden min-h-[5.5rem] rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 sm:block">
         {node ? (
           <>
             <NodeTitle node={node} />
@@ -255,9 +285,12 @@ export function LifeOsDiagram() {
         )}
       </div>
 
-      {/* Phones: the diagram is tall, so details pop up pinned to the bottom of the screen. */}
-      {node && (
+      {/* Phones: the diagram is tall, so details pop up pinned to the bottom of
+          the screen. Rendered into <body> because an animated (transformed)
+          ancestor would otherwise pin it to the page instead of the screen. */}
+      {node && createPortal(
         <div
+          ref={cardRef}
           role="dialog"
           aria-label={node.label}
           className="fade-up fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 rounded-xl border border-neutral-200 bg-white/95 px-4 py-3 shadow-lg backdrop-blur-md sm:hidden"
@@ -274,7 +307,8 @@ export function LifeOsDiagram() {
             </button>
           </div>
           <p className="mt-1 text-sm leading-relaxed text-neutral-600">{node.description}</p>
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );
